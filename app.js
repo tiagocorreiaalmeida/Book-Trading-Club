@@ -1,5 +1,10 @@
 const express = require("express");
 const hbs = require("hbs");
+const passport = require("passport");
+
+const passportConfig = require(".controllers/passport");
+
+passportConfig(passport);
 
 const app = express();
 
@@ -16,6 +21,14 @@ app.get("/",(req,res)=>{
 
 app.get("/profile",(req,res)=>{
     res.render("user");
+});
+
+app.get("/requests",(req,res)=>{
+    res.render("requests");
+});
+
+app.get("/mybooks",(req,res)=>{
+    res.render("mybooks");
 });
 
 app.use((req,res)=>{

@@ -9,6 +9,7 @@ body{
 
 main{
     padding-top:90px;
+    padding-bottom: 4rem;
 }
 
 /* //////////////////////////////////////////// */
@@ -68,7 +69,7 @@ main{
 /* FEATURE BOX */
 
 .feature-box{
-    padding: 3rem 0 4rem 0;
+    padding: 3rem 0 0 0;
 }
 
 .feature-box__item{
@@ -196,7 +197,7 @@ nav{
 }
 
 .notfound-page{
-    height:75vh;
+    height:65vh;
     background-color:#f6f6f6;
     display: flex;
     justify-content: center;
@@ -207,19 +208,27 @@ nav{
 /* PAGE TITLE */
 .page__title{
     display: block;
-    height:15rem;
+    height:11rem;
     background-position: center;
     background-size: cover;
     position: relative;
-    margin-bottom: 5rem;
+    margin-bottom: 1.5rem;
 }
 
 .page__title-user{
     background-image: url("/img/user.jpg");
 }
 
+.page__title-request{
+    background-image: url("/img/requests.jpg");
+}
+
+.page__title-mybooks{
+    background-image: url("/img/requests.jpg");
+}
+
 .page__title p{
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
     text-transform: uppercase;
     color: #f6f6f6;
@@ -250,10 +259,6 @@ nav{
      box-shadow: none;
  }
 
- .left-addon input:focus .input-icons {
-    background-color:#3c6b84;
- }
-
 .inner-addon .input-icons {
     display: flex;
     justify-content: center;
@@ -266,3 +271,73 @@ nav{
     background-color:#274555;
     color:#fff;
 }
+
+.left-addon input:focus + .input-icons{
+    background-color:#3c6b84;
+ }
+
+.img-thumbnail{
+    border-radius: 50%;
+    max-width: 140px;
+}
+
+/* //////////////////////////////////////////// */
+/* REUSABLE */
+
+.btn-default{
+    display: inline-block;
+    border-radius: 100px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: .8rem 1.2rem;
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+    transition: all .2s;
+}
+
+.btn-default:hover{
+    transform: translateY(-3px);
+}
+
+.btn-default:focus,
+.btn-default:active{
+    transform: translateY(-1px);
+    box-shadow: 0 .8rem 1.5rem rgba(0,0,0,0.1);
+}
+
+.btn-default--green{
+    background-color: #3c6b84;
+    color: #fff !important;
+    cursor:pointer;
+}
+
+.page-navigation{
+
+}
+
+.page-navigation__item{
+    display: inline-block;
+    font-size:1.2rem;
+    color:inherit;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    padding-bottom: 2px;
+    border-bottom: 4px solid #f6f6f6;
+    margin-bottom: 1rem;
+}
+
+.page-navigation__item.active,
+.page-navigation__item:hover{
+    color:inherit;
+    border-bottom: 4px solid #46ACC2;
+}
+
+.page-navigation__item:not(:last-child){
+    margin-right: 1.5rem;
+}
+
+.margin-small{
+    margin: 0.5rem;
+}
+
+/* //////////////////////////////////////////// */
+/* REQUEST PAGE */
