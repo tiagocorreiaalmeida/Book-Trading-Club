@@ -4,7 +4,7 @@ html{
 
 body{
     background-color: #f6f6f6;
-    font-size:1.6rem;
+    font-size:1rem;
 }
 
 main{
@@ -253,7 +253,7 @@ nav{
   }
   
   .left-addon input  { 
-    padding-left:  50px;
+    padding: 6px 6px 6px 50px !important;
     border-radius: 0;
     border: 0;
     border-bottom: .3rem solid #274555;
@@ -261,8 +261,8 @@ nav{
 
  .left-addon input:focus{
      outline: none;
-     border-color:#3c6b84;
      box-shadow: none;
+     border-bottom: .3rem solid #274555;
  }
 
 .inner-addon .input-icons {
@@ -272,20 +272,18 @@ nav{
     width:45px;
     position: absolute;
     left: 0;
-    padding: 6px 10px;
+    padding: 11px 10px;
     pointer-events: none;
     background-color:#274555;
     color:#fff;
 }
 
-.left-addon input:focus + .input-icons{
-    background-color:#3c6b84;
- }
 
 .img-thumbnail{
     border-radius: 50%;
     max-width: 140px;
 }
+
 
 /* //////////////////////////////////////////// */
 /* REUSABLE */
@@ -378,7 +376,7 @@ nav{
 .book-card__top__img{
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: cover;
     transition: all .2s;
 }
 
@@ -427,4 +425,81 @@ nav{
 .book-card__bottom__author{
     font-size: 1.1rem;
     color: #4e5861;
+}
+
+.search{
+    max-width: 22rem;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+.search__input{
+    width: 90%;
+    margin: 0 auto;
+    font-size: 1rem;
+    outline: none;
+    border: 1px solid #fff;
+    padding: 8px 16px;
+    border-radius: 5rem;
+    background-color: #ddd;
+    border: none;
+    transition: all .2s;
+}
+
+.search__input:focus{
+    width: 100%;
+}
+
+/* //////////////////////////////////////////// */
+/* QUERIES */
+
+@media only screen and (max-width: 992px){
+    html{
+        font-size: 90%; 
+    }
+}
+
+@media only screen and (max-width: 992px){
+    .navbar-expand-lg>.container, .navbar-expand-lg>.container-fluid {
+        padding-left:10px;
+        padding-right: 10px;
+    }
+
+    .banner__box__title{
+        font-size:1.8rem;
+        margin-bottom: 5rem;
+    }
+
+    h1{
+        font-size: 2rem;
+    }
+
+    .page__title h1 {
+        font-size:2.1rem;
+    }
+}
+
+@media only screen and (max-width: 767px){
+    html{
+        font-size:80%;
+    }
+
+    .img-thumbnail {
+        max-width: 120px;
+    }
+}
+
+@media only screen and (max-width: 575px){
+    .feature-box{
+        text-align: center;
+    }
+    .banner__box__title{
+        font-size:1.5rem;
+        margin-bottom: 5rem;
+    }
+
+    .page__title h1 {
+        font-size:1.8rem;
+    }
 }
