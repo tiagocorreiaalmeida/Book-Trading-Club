@@ -8,7 +8,7 @@ body{
 }
 
 main{
-    padding-top:90px;
+    padding-top:76px;
     padding-bottom: 4rem;
 }
 
@@ -138,6 +138,11 @@ footer{
 
 nav{
     box-shadow: 0 0.8rem 1.5rem rgba(0,0,0,.1);
+    padding: 3px 0 !important;
+}
+
+.navbar-brand img{
+    height: 60px;
 }
 
 .nav-item:not(:last-child){
@@ -145,7 +150,7 @@ nav{
 }
 
 .nav-item .nav-link{
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -206,6 +211,7 @@ nav{
 
 /* //////////////////////////////////////////// */
 /* PAGE TITLE */
+
 .page__title{
     display: block;
     height:11rem;
@@ -227,7 +233,7 @@ nav{
     background-image: url("/img/requests.jpg");
 }
 
-.page__title p{
+.page__title h1{
     font-size: 2.5rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -304,7 +310,7 @@ nav{
     box-shadow: 0 .8rem 1.5rem rgba(0,0,0,0.1);
 }
 
-.btn-default--green{
+.btn-default-green{
     background-color: #3c6b84;
     color: #fff !important;
     cursor:pointer;
@@ -335,9 +341,90 @@ nav{
     margin-right: 1.5rem;
 }
 
-.margin-small{
-    margin: 0.5rem;
-}
 
 /* //////////////////////////////////////////// */
-/* REQUEST PAGE */
+/* BOOKS LAYOUT */
+.row.mybooks{
+    visibility: hidden;
+    height:0;
+}
+
+.row.mybooks.active{
+    visibility: visible;
+    height: auto;
+}
+
+.row.addbook{
+    visibility: hidden;
+    height:0;
+}
+
+.row.addbook.active{
+    visibility: visible;
+    height: auto;
+}
+
+.book-card{
+    margin-bottom: 2rem;
+    box-shadow: 0 1rem 2rem rgba(0,0,0,.2);
+}
+
+.book-card__top{
+    height: 10rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.book-card__top__img{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    transition: all .2s;
+}
+
+.book-card__top:hover img{
+    transform: scale(1.05);
+}
+
+.book-card__top__date{
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    position: absolute;
+    top:7%;
+    right:5%;
+    background-color:#46ACC2;
+    border-radius:100%;
+    padding: 10px 5px;
+}
+
+.book-card__top__info{
+    font-size: 1rem;
+    color:#fff !important;
+    font-weight: 500;
+    padding: 4px 10px 4px 6px;
+    position: absolute;
+    left:0;
+    bottom:0;
+    background-color: #46ACC2;
+    cursor:pointer;
+}
+
+.book-card__top__info:hover{
+    color: #f6f6f6;
+}
+
+.book-card__bottom{
+    background-color:#fff;
+    padding: 12px 14px;
+}
+
+.book-card__bottom__title{
+    padding-top:8px;
+    font-size: 1.2rem;
+}
+
+.book-card__bottom__author{
+    font-size: 1.1rem;
+    color: #4e5861;
+}

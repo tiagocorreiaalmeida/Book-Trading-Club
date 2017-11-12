@@ -2,9 +2,8 @@ const express = require("express");
 const hbs = require("hbs");
 const passport = require("passport");
 
-const passportConfig = require(".controllers/passport");
+const passportConfig = require("./controllers/passport");
 
-passportConfig(passport);
 
 const app = express();
 
