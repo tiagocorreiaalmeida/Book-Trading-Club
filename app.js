@@ -1,19 +1,24 @@
 require("dotenv").config();
-const express = require("express");
-const hbs = require("hbs");
-const passport = require("passport");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const express = require("express"),
+      hbs = require("hbs"),
+      bodyPaser = require("body-parser"),
+      passport = require("passport"),
+      session = require("express-session"),
+      MongoStore = require("connect-mongo")(session),
+      flash = require("express-flash");
 
-const passportConfig = require("./controllers/passport");
-const mongoose = require("./config/mongoose");
-const user = require("./routes/user");
+const passportConfig = require("./controllers/passport"),
+      mongoose = require("./config/mongoose"),
+      user = require("./routes/user");
 
 passportConfig(passport);
 
 const app = express();
 
 app.use(express.static(__dirname+"/public"));
+app.use(bodyPaser.urlencoded({extended:false}));
+app.use(bodyPaser.json());
+app.use(flash());
 
 app.set("views",__dirname+"/views");   
 app.set("view engine","hbs");
@@ -36,6 +41,15 @@ app.use((req,res,next)=>{
     next();
 })
 
+app.get("/",(req,res)=>{
+    res.render("index");
+});
+
+app.use("/user",user);
+
+app.get("/books",(req,res)=>{
+    res.render("books");
+});
 
 app.get("/auth/facebook",passport.authenticate("facebook"));
 app.get("/auth/facebook/callback",passport.authenticate("facebook",{failureRedirect:"/"}),(req,res)=>{
@@ -50,16 +64,6 @@ app.get("/auth/github/callback",passport.authenticate("github",{failureRedirect:
 app.get("/auth/twitter",passport.authenticate("twitter"));
 app.get("/auth/twitter/callback",passport.authenticate("twitter",{failureRedirect:"/"}),(req,res)=>{
     res.redirect("/");
-});
-
-app.get("/",(req,res)=>{
-    res.render("index");
-});
-
-app.use("/user",user);
-
-app.get("/books",(req,res)=>{
-    res.render("books");
 });
 
 app.get("/logout",(req,res)=>{

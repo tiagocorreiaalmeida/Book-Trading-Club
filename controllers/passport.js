@@ -1,7 +1,7 @@
-const FacebookStrategy = require("passport-facebook");
-const TwitterStrategy = require("passport-twitter");
-const GithubStrategy = require("passport-github");
-const moment = require("moment");
+const FacebookStrategy = require("passport-facebook"),
+      TwitterStrategy = require("passport-twitter"),
+      GithubStrategy = require("passport-github"),
+      moment = require("moment");
 
 const User = require("../models/user");
 
@@ -12,12 +12,12 @@ module.exports = (passport) => {
         callbackURL: "http://localhost:3000/auth/facebook/callback",
         profileFields: ["id", "displayName", "photos"]
     }, (accessToken, refreshToken, profile, done) => {
-        User.findOne({ oauthID: profile.id, socialnetwork: "facebook" }).then((user) => {
+        User.findOne({ oauthID: profile.id, socialNetwork: "facebook" }).then((user) => {
             if (user) return user;
             return new User({
                 oauthID: profile.id.toString(),
                 username: profile.displayName,
-                socialnetwork: "facebook",
+                socialNetwork: "facebook",
                 photo: profile.photos[0].value,
                 createdAt: moment().valueOf()
             }).save()
@@ -30,12 +30,12 @@ module.exports = (passport) => {
         clientSecret: process.env.GIT_SECRET,
         callbackURL: "http://localhost:3000/auth/github/callback"
     }, (accessToken, refreshToken, profile, done) => {
-        User.findOne({ oauthID: profile.id, socialnetwork: "github" }).then((user) => {
+        User.findOne({ oauthID: profile.id, socialNetwork: "github" }).then((user) => {
             if (user) return user;
             return new User({
                 oauthID: profile.id.toString(),
                 username: profile.username,
-                socialnetwork: "github",
+                socialNetwork: "github",
                 photo: profile.photos[0].value,
                 createdAt: moment().valueOf()
             }).save()
@@ -54,7 +54,7 @@ module.exports = (passport) => {
              return new User({
                 oauthID:profile.id.toString(),
                 username:profile.username,
-                socialnetwork: "twitter",
+                socialNetwork: "twitter",
                 photo:profile.photos[0].value,
                 createdAt:moment().format("Do MMMM YYYY")
             }).save()

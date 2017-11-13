@@ -4,50 +4,52 @@
         <h1>MY PROFILE</h1>
     </div>
     <form method="POST">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center mb-5">
-                <img src="https://www.1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" alt="user photo" class="img-thumbnail img-fluid mt-3 mb-2">
-            </div>
-            <div class="col-sm-6 mb-4">
-                <div class="inner-addon left-addon">
-                    <i class="input-icons fa fa-user" aria-hidden="true"></i>
-                    <input type="text" class="form-control" placeholder="username" disabled/>
+        <div class="container">
+            <div class="row">
+                {{#if messages.info}}
+                    <p class="alert-default alert-default-info mb-4">{{messages.info}}</p>
+                {{/if}}
+                <div class="col-md-12 text-center mb-5">
+                    <img src="{{user.photo}}" alt="user photo" class="img-thumbnail img-fluid mt-3 mb-2">
                 </div>
-            </div>
-            <div class="col-sm-6 mb-4 mb-4">
-                <div class="inner-addon left-addon">
-                    <i class="input-icons fa fa-envelope" aria-hidden="true"></i>
-                    <input type="text" class="form-control" placeholder="email" disabled/>
-                </div>
-            </div>
-            <div class="col-sm-6 mb-4">
-                <div class="inner-addon left-addon">
-                    <i class="input-icons fa fa-user-circle-o" aria-hidden="true"></i>
-                    <input type="text" id="name" class="form-control" placeholder="full name" />
-                </div>
-            </div>
-            <div class="col-sm-6 mb-4">
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="inner-addon left-addon">
-                            <i class="input-icons fa fa-compass" aria-hidden="true"></i>
-                            <input type="text" id="city" class="form-control" placeholder="city" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="inner-addon left-addon">
-                            <i class="input-icons fa fa-map-marker" aria-hidden="true"></i>
-                            <input type="text" id="state" class="form-control" placeholder="state" />
-                        </div>
+                <div class="col-sm-6 mb-4">
+                    <label for="username" class="lead">Your username</label>
+                    <div class="inner-addon left-addon">
+                        <i class="input-icons fa fa-user" aria-hidden="true"></i>
+                        <input type="text" class="form-control" placeholder="username" value="{{user.username}}" disabled/>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12 text-center">
-                <button class="btn btn-default btn-default-green"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Update info</button>    
+                <div class="col-sm-6 mb-4">
+                    <label for="name" class="lead">Your name</label>
+                    <div class="inner-addon left-addon">
+                        <i class="input-icons fa fa-user-circle-o" aria-hidden="true"></i>
+                        <input type="text" id="name" class="form-control" value="{{user.fullName}}" name="fullname" placeholder="full name" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 mb-4">
+                    <div class="row">
+                        <div class="col-sm-6 mb-4">
+                            <label for="city" class="lead">Your city</label>
+                            <div class="inner-addon left-addon">
+                                <i class="input-icons fa fa-compass" aria-hidden="true"></i>
+                                <input type="text" id="city" class="form-control" value="{{user.city}}" name="city" placeholder="city name" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="state" class="lead">Your state</label>
+                            <div class="inner-addon left-addon">
+                                <i class="input-icons fa fa-map-marker" aria-hidden="true"></i>
+                                <input type="text" id="state" class="form-control" value="{{user.state}}" name="state" placeholder="your state" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-default btn-default-green">
+                        <i class="fa fa-check-circle-o" aria-hidden="true"></i> Update info</button>
+                </div>
             </div>
         </div>
-    </div>
     </form>
 </main>
 {{>footer}}

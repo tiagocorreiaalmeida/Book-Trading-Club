@@ -451,6 +451,24 @@ nav{
     width: 100%;
 }
 
+
+/* //////////////////////////////////////////// */
+/* ALERTS */
+
+.alert-default{
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 6px 20px;
+    border-radius: 100px;
+}
+
+.alert-default-info{
+    background-color: #46ACC2;
+    color: #fff;
+    
+}
+
 /* //////////////////////////////////////////// */
 /* QUERIES */
 
