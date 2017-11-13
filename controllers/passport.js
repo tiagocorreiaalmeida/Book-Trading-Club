@@ -9,7 +9,7 @@ module.exports = (passport) => {
     passport.use(new FacebookStrategy({
         clientID: process.env.FB_ID,
         clientSecret: process.env.FB_SECRET,
-        callbackURL: "http://localhost:3000/auth/facebook/callback",
+        callbackURL: process.env.FB_CALLBACK,
         profileFields: ["id", "displayName", "photos"]
     }, (accessToken, refreshToken, profile, done) => {
         User.findOne({ oauthID: profile.id, socialNetwork: "facebook" }).then((user) => {
@@ -28,7 +28,7 @@ module.exports = (passport) => {
     passport.use(new GithubStrategy({
         clientID: process.env.GIT_ID,
         clientSecret: process.env.GIT_SECRET,
-        callbackURL: "http://localhost:3000/auth/github/callback"
+        callbackURL: process.env.GIT_CALLBACK
     }, (accessToken, refreshToken, profile, done) => {
         User.findOne({ oauthID: profile.id, socialNetwork: "github" }).then((user) => {
             if (user) return user;
@@ -47,7 +47,7 @@ module.exports = (passport) => {
     passport.use(new TwitterStrategy({
         consumerKey: process.env.TWITTER_ID,
         consumerSecret: process.env.TWITTER_SECRET,
-        callbackURL:"http://127.0.0.1:3000/auth/twitter/callback"
+        callbackURL: process.env.TWITTER_CALLBACK
     },(accessToken ,refreshToken, profile, done)=>{
         User.findOne({oauthID:profile.id}).then((user)=>{
             if(user) return user;

@@ -319,6 +319,7 @@ nav{
 }
 
 .page-navigation__item{
+    cursor: pointer;
     display: inline-block;
     font-size:1.2rem;
     color:inherit;
@@ -468,6 +469,7 @@ nav{
     color: #fff;
     
 }
+
 
 /* //////////////////////////////////////////// */
 /* QUERIES */
