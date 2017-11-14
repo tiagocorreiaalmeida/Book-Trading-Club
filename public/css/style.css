@@ -458,6 +458,7 @@ nav{
 
 .alert-default{
     font-size: 1.1rem;
+    color: #fff;
     max-width: 600px;
     margin: 0 auto;
     padding: 6px 20px;
@@ -466,8 +467,14 @@ nav{
 
 .alert-default-info{
     background-color: #46ACC2;
-    color: #fff;
-    
+}
+
+.alert-default-danger{
+    background-color: #FB3640;
+}
+
+.alert-default-success{
+    background-color:#21897E;
 }
 
 

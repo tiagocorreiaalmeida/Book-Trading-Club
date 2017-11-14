@@ -1,6 +1,6 @@
 $("document").ready(function(){
 
-  //BOOKS NAVIGATION
+  //ADD BOOKS
   $("#bookslist").on("click",()=>{
     let ele = $("#bookslist");
     if(!ele.hasClass('active') && $("#booksearch").hasClass('active')){
@@ -21,19 +21,30 @@ $("document").ready(function(){
     }
   });
 
+  let alertMessage = (type,message)=>{
+    if($(".alerts").length > 0){
+      $(".alerts").empty();
+    }
+    if(message){
+      $(".alerts").append(`<p class="alert-default alert-default-${type} mb-4">${message}</p>`);
+    }
+  }
+  
   $(".search__input").keypress((e)=>{
     if(e.which === 13){
       let input = $(".search__input").val();
       if(input === ""){
-        console.log("please fill the form");
+        alertMessage("info","Fill the input to search for books");
       }else{
         $.getJSON(`/user/books/search/${input}`,((data)=>{
+          $("#addbook").empty();
           if(data && data.error){
-            console.log(data.error);
+            alertMessage("danger",data.error);
           }else if(data){
+            alertMessage();
             data.forEach((ele)=>{
               $("#addbook").append(`
-              <div class="col-lg-3 col-md-4 col-sm-6">
+              <div class="col-lg-3 col-md-4 col-sm-6" ele-id="${ele.id}">
                    <div class="book-card">
                        <div class="book-card__top">
                            <img class="book-card__top__img" src="${ele.image}" alt="Book Image">
@@ -59,4 +70,18 @@ $("document").ready(function(){
       }
     }
   });
+
+  $("#addbook").on("click",".addtobooks",function(e){
+    let id = this.id;
+    $.getJSON(`/user/books/add/${id}`,((data)=>{
+      if(data && data.error){
+        alertMessage("danger",data.error);
+        console.log(data.error);
+      }else if(data){
+        $(`[ele-id="${id}"]`).fadeOut();
+        alertMessage("success",data.message);
+      }
+    }));
+  })
+
 });

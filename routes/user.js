@@ -3,6 +3,7 @@ const express = require("express"),
     books = require("google-books-search");
 
 const User = require("../models/user"),
+    Book = require("../models/books"),
     auth = require("../middleware/authenticated");
 
 router.get("/profile", auth, (req, res) => {
@@ -37,13 +38,7 @@ router.get("/books", auth, (req, res) => {
 
 router.get("/books/search/:term", (req, res) => {
     let term = req.params.term;
-    let options = {
-        field: 'title',
-        type: 'book',
-        order: 'relevance',
-        lang: 'en'
-    }
-    books.search(term, (error, results) => {
+    books.search(term,(error, results) => {
         if (!error) {
             if (results.length > 0) {
                 let data = [];
@@ -57,7 +52,7 @@ router.get("/books/search/:term", (req, res) => {
                         }
                         if (results[i].authors.length > 0) {
                             results[i].authors = results[i].authors.join(", ");
-                            }
+                        }
                         data.push({
                             id: results[i].id,
                             title: results[i].title,
@@ -70,10 +65,47 @@ router.get("/books/search/:term", (req, res) => {
                 }
                 res.send(JSON.stringify(data));
             } else {
-                res.send(JSON.stringify({ error: "No data found based on your search" }));
+                res.send(JSON.stringify({ error: "No books found based on your search" }));
             }
         } else {
             console.log(error);
+            res.redirect("/books");
+        }
+    });
+});
+
+router.get("/books/add/:id", (req, res) => {
+    let id = req.params.id;
+    books.search(id,(error ,data) => {
+        if(error || !data[0].publishedDate || !data[0].authors){
+            res.send(JSON.stringify({ error: "Something went wrong please try again later!" }));
+        }else if(data){
+            Book.findOne({book_id:id}).then((book)=>{
+                if(book){
+                    Book.findOne({book_id:id,owners:req.user.id}).then((data)=>{
+                        if(data) return;
+                        return Book.update({book_id:id},{$push:{owners:req.user.id}});
+                    })
+                }else{
+                   return new Book({
+                    book_id:id,
+                    title: data[0].title,
+                    authors: data[0].authors,
+                    book_date: data[0].publishedDate,
+                    url: data[0].link,
+                    image: data[0].thumbnail,
+                    owners:[req.user.id]
+                   }).save();
+                }
+            }).then((doc)=>{
+                if(doc){
+                    res.send(JSON.stringify({message:"Book added with success to your books"}));
+                }else{
+                    res.send(JSON.stringify({error: "You allready own the book!" }));
+                }
+            }).catch((e)=>{
+                console.log(e);
+            })   
         }
     });
 });
