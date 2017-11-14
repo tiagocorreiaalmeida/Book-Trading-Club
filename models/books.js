@@ -11,10 +11,11 @@ const BookSchema = mongoose.Schema({
         trim: true
     },
     authors:{
-        type: Array,
-        required:true
+        type:String,
+        required:true,
+        trim:true
     },
-    book_date:{
+    date:{
         type: String,
         required: true
     },
@@ -27,7 +28,7 @@ const BookSchema = mongoose.Schema({
         trim: true
     },
     owners:{
-        type: Array,
+        type:Array,
         default:[]
     }
 });

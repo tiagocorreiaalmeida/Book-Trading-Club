@@ -33,7 +33,14 @@ router.get("/requests", auth, (req, res) => {
 });
 
 router.get("/books", auth, (req, res) => {
-    res.render("mybooks");
+   Book.find({owners:req.user.id},{_id:0, book_id:1, title:1, url:1, image:1, authors:1,date:1}).then((books)=>{
+        if(books.length > 0){
+            res.render("mybooks",{books});
+        }else{
+            req.flash("info","You have no books registed!");
+            res.render("mybooks");
+        }
+    });
 });
 
 router.get("/books/search/:term", (req, res) => {
@@ -87,11 +94,20 @@ router.get("/books/add/:id", (req, res) => {
                         return Book.update({book_id:id},{$push:{owners:req.user.id}});
                     })
                 }else{
+                    if (data[0].authors.length > 0) {
+                        data[0].authors = data[0].authors.join(", ");
+                    }
+                    let date;
+                    if (data[0].publishedDate.length > 4) {
+                        date = data[0].publishedDate.slice(0, 4);
+                    } else { 
+                        date = data[0].publishedDate;
+                    }
                    return new Book({
                     book_id:id,
                     title: data[0].title,
                     authors: data[0].authors,
-                    book_date: data[0].publishedDate,
+                    date: date,
                     url: data[0].link,
                     image: data[0].thumbnail,
                     owners:[req.user.id]
@@ -99,7 +115,7 @@ router.get("/books/add/:id", (req, res) => {
                 }
             }).then((doc)=>{
                 if(doc){
-                    res.send(JSON.stringify({message:"Book added with success to your books"}));
+                    res.send(JSON.stringify(doc));
                 }else{
                     res.send(JSON.stringify({error: "You allready own the book!" }));
                 }

@@ -11,117 +11,56 @@
             <a class="page-navigation__item" id="booksearch">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD BOOK</a>
         </div>
-        <div class="row equal mybooks active">
+        <div class="row mybooks active">
+            {{#if messages}}
             <div class="col-md-12 text-center mt-2">
-                <p class="lead">You have no books yet!</p>
+                <p class="lead">{{messages.info}}</p>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
+            {{/if}} {{#if books}} {{#each books}}
+            <div class="col-lg-3 col-md-4 col-sm-6" book-id="{{book_id}}">
                 <div class="book-card">
                     <div class="book-card__top">
-                        <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                        <span class="book-card__top__date">2017</span>
-                        <a class="book-card__top__info"> More Info</a>
+                        <img class="book-card__top__img" src="{{image}}" alt="Book Image">
+                        <span class="book-card__top__date">{{date}}</span>
+                        <a class="book-card__top__info" href="{{url}}"> More Info</a>
                     </div>
                     <div class="book-card__bottom">
-                        <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
+                        <h2 class="book-card__bottom__title">{{title}}</h2>
                         <p class="book-card__bottom__author">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{authors}}</p>
                         <div class="text-center">
-                            <a href="#" class="btn btn-default btn-default-green">
+                            <a href="#" class="btn btn-default btn-default-green remove" id="{{book_id}}">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="book-card">
-                    <div class="book-card__top">
-                        <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                        <span class="book-card__top__date">2017</span>
-                        <a class="book-card__top__info"> More Info</a>
-                    </div>
-                    <div class="book-card__bottom">
-                        <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                        <p class="book-card__bottom__author">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                        <div class="text-center">
-                            <a href="#" class="btn btn-default btn-default-green">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="book-card">
-                    <div class="book-card__top">
-                        <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                        <span class="book-card__top__date">2017</span>
-                        <a class="book-card__top__info"> More Info</a>
-                    </div>
-                    <div class="book-card__bottom">
-                        <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                        <p class="book-card__bottom__author">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                        <div class="text-center">
-                            <a href="#" class="btn btn-default btn-default-green">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="book-card">
-                    <div class="book-card__top">
-                        <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                        <span class="book-card__top__date">2017</span>
-                        <a class="book-card__top__info"> More Info</a>
-                    </div>
-                    <div class="book-card__bottom">
-                        <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                        <p class="book-card__bottom__author">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                        <div class="text-center">
-                            <a href="#" class="btn btn-default btn-default-green">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="book-card">
-                    <div class="book-card__top">
-                        <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                        <span class="book-card__top__date">2017</span>
-                        <a class="book-card__top__info"> More Info</a>
-                    </div>
-                    <div class="book-card__bottom">
-                        <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                        <p class="book-card__bottom__author">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                        <div class="text-center">
-                            <a href="#" class="btn btn-default btn-default-green">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{/each}} {{/if}}
         </div>
-
-        <div class="row equal addbook">
+        <div class="row addbook">
             <div class="col-md-12 text-center mt-2 mb-4">
                 <div class="search">
                     <input type="text" class="search__input" placeholder="search by book name">
                 </div>
             </div>
             <div class="col-md-12">
-                                    <div class="alerts col-md-12 text-center">
-
+                <div class="alerts col-md-12 text-center">
+                    <div class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
                     </div>
+                </div>
                 <div class="row" id="addbook">
                 </div>
             </div>
