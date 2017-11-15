@@ -31,7 +31,7 @@ $("document").ready(function () {
     }
   }
 
-  let appendData = (parent,attr,ele,icon) => {
+  let appendData = (parent, attr, ele, icon) => {
     $(`${parent}`).append(`
     <div class="col-lg-3 col-md-4 col-sm-6" ${attr}-id="${ele.id}">
          <div class="book-card">
@@ -55,26 +55,31 @@ $("document").ready(function () {
   `);
   }
 
-
+  let lastSearch = "";
   $(".search__input").keypress((e) => {
     if (e.which === 13) {
       let input = $(".search__input").val();
       if (input === "") {
         alertMessage("info", "Fill the input to search for books");
       } else {
-        $(".sk-circle").css("display","block");
-        $.getJSON(`/user/books/search/${input}`, ((data) => {
-          $("#addbook").empty();
-          $(".sk-circle").css("display","none");
-          if (data && data.error) {
-            alertMessage("danger", data.error);
-          } else if (data) {
-            alertMessage();
-            data.forEach((ele) => {
-              appendData("#addbook","ele",ele,"fa-plus-circle");
-            });
-          }
-        }));
+        if (lastSearch !== input) {
+          $(".sk-circle").css("display", "block");
+          $.getJSON(`/user/books/search/${input}`, ((data) => {
+            $("#addbook").empty();
+            $(".sk-circle").css("display", "none");
+            if (data && data.error) {
+              alertMessage("danger", data.error);
+            }else if(data && data.message){
+              alertMessage("info",data.message);
+            } else if (data) {
+              alertMessage();
+              data.forEach((ele) => {
+                appendData("#addbook", "ele", ele, "fa-plus-circle");
+              });
+            }
+          }));
+          lastSearch = input;
+        }
       }
     }
   });
@@ -85,11 +90,16 @@ $("document").ready(function () {
       if (data && data.error) {
         alertMessage("danger", data.error);
       } else if (data) {
-        appendData(".mybooks","book-id",data,"fa-trash-o");
+        appendData(".mybooks", "book-id", data, "fa-trash-o");
         $(`[ele-id="${id}"]`).fadeOut();
         alertMessage("success", "Book added with success to your books");
       }
     }));
   })
+
+
+  /////////////////////////////////////////
+  //REMOVE BOOKS
+
 
 });
