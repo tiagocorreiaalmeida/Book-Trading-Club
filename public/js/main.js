@@ -92,6 +92,7 @@ $("document").ready(function () {
         alertMessage("danger", data.error);
         $(`#${id}`).css("pointer-events","auto");
       } else if (data) {
+        console.log(data);
         if($("#empty").length > 0){
           $("#empty").remove();
         }

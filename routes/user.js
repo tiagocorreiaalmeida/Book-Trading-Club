@@ -103,18 +103,25 @@ router.get("/books/add/:id", (req, res) => {
         } else if (data) {
             Book.findOne({ id: id }).then((book) => {
                 if (book) {
-                    Book.findOne({ id: id, "owners.user_id": req.user.id}).then((data) => {
-                        if (data) return null;
-                        return Book.update({ id: id },
-                            {
-                                $push: {
-                                    owners: {
-                                        user_id: req.user.id,
-                                        username: req.user.username
+                    Book.findOne({ id: id, "owners.user_id": req.user.id }).then((bookDoc) => {
+                        if (bookDoc) {
+                            res.send(JSON.stringify({ error: "You allready own the book" }));
+                        } else {
+                            return Book.findOneAndUpdate({ id: id },
+                                {
+                                    $push: {
+                                        owners: {
+                                            user_id: req.user.id,
+                                            username: req.user.username
+                                        }
                                     }
-                                }
-                        });
-                    });
+                                });
+                        }
+                    }).then((bookDoc) => {
+                        if (data) {
+                            res.send(JSON.stringify(bookDoc));
+                        }
+                    }).catch((e) => { console.log(e) });
                 } else {
                     if (data[0].authors.length > 0) {
                         data[0].authors = data[0].authors.join(", ");
@@ -125,7 +132,7 @@ router.get("/books/add/:id", (req, res) => {
                     } else {
                         date = data[0].publishedDate;
                     }
-                    return new Book({
+                    var newBook = new Book({
                         id: id,
                         title: data[0].title,
                         authors: data[0].authors,
@@ -137,13 +144,9 @@ router.get("/books/add/:id", (req, res) => {
                             username: req.user.username
                         }
                     }).save();
-                }
-            }).then((doc) => {
-                console.log(doc);
-                if (doc) {
-                    res.send(JSON.stringify(doc));
-                } else {
-                    res.send(JSON.stringify({ error: "You allready own the book" }));
+                    newBook.then((newDoc) => {
+                        res.send(JSON.stringify(newDoc));
+                    }).catch((e) => { console.log(e); });
                 }
             }).catch((e) => {
                 console.log(e);
@@ -156,18 +159,18 @@ router.get("/books/remove/:id", (req, res) => {
     let id = req.params.id;
     Book.findOne({ id }).then((data) => {
         if (data) {
-            return Book.findOneAndUpdate({id}, { $pull: { owners: { user_id: req.user.id } } },{new:true});
+            return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
         }
         return null;
     }).then((doc) => {
         if (doc) {
-            if(doc.owners.length === 0){
-            return Book.findOneAndRemove({id});
+            if (doc.owners.length === 0) {
+                return Book.findOneAndRemove({ id });
             }
         }
         return null;
-    }).then((deletedDoc)=>{
-        res.send(JSON.stringify({message:"Book removed from your list with success"}));
+    }).then((deletedDoc) => {
+        res.send(JSON.stringify({ message: "Book removed from your list with success" }));
     }).catch((e) => {
         console.log(e);
     })
