@@ -13,10 +13,15 @@
         </div>
         <div class="row mybooks active">
             {{#if messages}}
-            <div class="col-md-12 text-center mt-2">
+            <div class="col-md-12 text-center mt-2" id="empty">
                 <p class="lead">{{messages.info}}</p>
             </div>
-            {{/if}} {{#if books}} {{#each books}}
+            {{/if}}
+            <div class="col-md-12">
+                <div class="alertsDelete col-md-12 text-center">
+                </div>
+            </div>
+            {{#if books}} {{#each books}}
             <div class="col-lg-3 col-md-4 col-sm-6" book-id="{{id}}">
                 <div class="book-card">
                     <div class="book-card__top">
@@ -46,6 +51,8 @@
             </div>
             <div class="col-md-12">
                 <div class="alerts col-md-12 text-center">
+                </div>
+                <div class="spinner">
                     <div class="sk-circle">
                         <div class="sk-circle1 sk-child"></div>
                         <div class="sk-circle2 sk-child"></div>

@@ -31,7 +31,7 @@ $("document").ready(function () {
     }
   }
 
-  let appendData = (parent, attr, ele, icon) => {
+  let appendData = (parent, attr, ele, icon,method) => {
     $(`${parent}`).append(`
     <div class="col-lg-3 col-md-4 col-sm-6" ${attr}-id="${ele.id}">
          <div class="book-card">
@@ -45,7 +45,7 @@ $("document").ready(function () {
                  <p class="book-card__bottom__author">
                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i> ${ele.authors}</p>
                  <div class="text-center">
-                     <a id="${ele.id}" class="btn btn-default btn-default-green addtobooks">
+                     <a id="${ele.id}" class="btn btn-default btn-default-green ${method}">
                          <i class="fa ${icon}" aria-hidden="true"></i>
                      </a>
                  </div>
@@ -63,9 +63,9 @@ $("document").ready(function () {
         alertMessage("info", "Fill the input to search for books");
       } else {
         if (lastSearch !== input) {
+          $("#addbook").empty();
           $(".sk-circle").css("display", "block");
           $.getJSON(`/user/books/search/${input}`, ((data) => {
-            $("#addbook").empty();
             $(".sk-circle").css("display", "none");
             if (data && data.error) {
               alertMessage("danger", data.error);
@@ -74,7 +74,7 @@ $("document").ready(function () {
             } else if (data) {
               alertMessage();
               data.forEach((ele) => {
-                appendData("#addbook", "ele", ele, "fa-plus-circle");
+                appendData("#addbook", "ele", ele, "fa-plus-circle","addtobooks");
               });
             }
           }));
@@ -84,13 +84,18 @@ $("document").ready(function () {
     }
   });
 
-  $("#addbook").on("click", ".addtobooks", function (e) {
+  $("#addbook").on("click", ".addtobooks", function () {
     let id = this.id;
+    $(`#${id}`).css("pointer-events","none");
     $.getJSON(`/user/books/add/${id}`, ((data) => {
       if (data && data.error) {
         alertMessage("danger", data.error);
+        $(`#${id}`).css("pointer-events","auto");
       } else if (data) {
-        appendData(".mybooks", "book-id", data, "fa-trash-o");
+        if($("#empty").length > 0){
+          $("#empty").remove();
+        }
+        appendData(".mybooks", "book", data, "fa-trash-o","remove");
         $(`[ele-id="${id}"]`).fadeOut();
         alertMessage("success", "Book added with success to your books");
       }
@@ -100,6 +105,16 @@ $("document").ready(function () {
 
   /////////////////////////////////////////
   //REMOVE BOOKS
-
-
+  $(".mybooks").on("click"  ,".remove",function(e){
+    let id = this.id;
+    $.getJSON(`/user/books/remove/${id}`,((data)=>{
+      if(data && data.message){
+        $(`[book-id="${id}"]`).fadeOut();
+        if ($(".alertsDelete").length > 0) {
+          $(".alertsDelete").empty();
+        }
+          $(".alertsDelete").append(`<p class="alert-default alert-default-success mb-4">${data.message}</p>`);
+      }
+    }))
+  })
 });
