@@ -14,6 +14,14 @@ router.get("/profile", auth, (req, res) => {
     });
 });
 
+const options = {
+    field: 'title',
+    limit: 16,
+    type: 'books',
+    order: 'relevance',
+    lang: 'en'
+};
+
 router.post("/profile", auth, (req, res) => {
     let fullName = req.body.fullname;
     let city = req.body.city;
@@ -45,7 +53,7 @@ router.get("/books", auth, (req, res) => {
 
 router.get("/books/search/:term", (req, res) => {
     let term = req.params.term;
-    books.search(term, (error, results) => {
+    books.search(term,options, (error, results) => {
         if (!error) {
             if (results.length > 0) {
                 let data = [];

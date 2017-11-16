@@ -287,7 +287,9 @@ nav{
 
 /* //////////////////////////////////////////// */
 /* REUSABLE */
-
+.modal-dialog-default{
+    max-width: 400px;
+}
 .btn-default{
     display: inline-block;
     border-radius: 100px;

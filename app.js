@@ -9,7 +9,8 @@ const express = require("express"),
 
 const passportConfig = require("./controllers/passport"),
       mongoose = require("./config/mongoose"),
-      user = require("./routes/user");
+      user = require("./routes/user"),
+      books = require("./routes/books");
 
 passportConfig(passport);
 
@@ -46,10 +47,7 @@ app.get("/",(req,res)=>{
 });
 
 app.use("/user",user);
-
-app.get("/books",(req,res)=>{
-    res.render("books");
-});
+app.use("/books",books);
 
 app.get("/auth/facebook",passport.authenticate("facebook"));
 app.get("/auth/facebook/callback",passport.authenticate("facebook",{failureRedirect:"/"}),(req,res)=>{
@@ -70,7 +68,7 @@ app.get("/logout",(req,res)=>{
     req.logOut();
     req.session.destroy();
     res.redirect("/");
-})
+});
 
 app.use((req,res)=>{
     res.render("404");

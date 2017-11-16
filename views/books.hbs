@@ -3,109 +3,60 @@
     <div class="page__title page__title-request">
         <h1>ALL BOOKS</h1>
     </div>
-
-    <div class="container mt-5">
-        <div class="row">
-        <div class="col-md-12 text-center mt-2 mb-5">
-                <div class="search">
-                <input type="text" class="search__input" placeholder="search by book name">
+    <div class="container mt-2">
+        <div class="row mb-5 mt-5">
+            <div class="alerts col-md-12 text-center mb-4">
             </div>
-        </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="book-card">
-                        <div class="book-card__top">
-                            <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                            <span class="book-card__top__date">2017</span>
-                            <a class="book-card__top__info"> More Info</a>
-                        </div>
-                        <div class="book-card__bottom">
-                            <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                            <p class="book-card__bottom__author">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-default btn-default-green">
-                                   TRADE
-                                </a>
+            {{#if books}} {{#each books}}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-book="{{id}}">
+                <div class="book-card">
+                    <div class="book-card__top">
+                        <img class="book-card__top__img" src="{{image}}" alt="Book Image">
+                        <span class="book-card__top__date">{{date}}</span>
+                        <a class="book-card__top__info" href="{{url}}"> More Info</a>
+                    </div>
+                    <div class="book-card__bottom">
+                        <h2 class="book-card__bottom__title">{{title}}</h2>
+                        <p class="book-card__bottom__author">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{authors}}</p>
+                        <div class="text-center">
+                            <a data-toggle="modal" data-target="#{{id}}" class="btn btn-default btn-default-green">
+                                TRADE
+                            </a>
+                            <div class="modal fade" id="{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-default" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Choose one user to trade with:</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <select class="custom-select" data-select="{{id}}">
+                                                {{#each owners}}
+                                                <option value="{{user_id}}">{{username}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-info request" data-id="{{id}}">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="book-card">
-                        <div class="book-card__top">
-                            <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                            <span class="book-card__top__date">2017</span>
-                            <a class="book-card__top__info"> More Info</a>
-                        </div>
-                        <div class="book-card__bottom">
-                            <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                            <p class="book-card__bottom__author">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-default btn-default-green">
-                                    TRADE
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="book-card">
-                        <div class="book-card__top">
-                            <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                            <span class="book-card__top__date">2017</span>
-                            <a class="book-card__top__info"> More Info</a>
-                        </div>
-                        <div class="book-card__bottom">
-                            <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                            <p class="book-card__bottom__author">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-default btn-default-green">
-                                    TRADE
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="book-card">
-                        <div class="book-card__top">
-                            <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                            <span class="book-card__top__date">2017</span>
-                            <a class="book-card__top__info"> More Info</a>
-                        </div>
-                        <div class="book-card__bottom">
-                            <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                            <p class="book-card__bottom__author">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-default btn-default-green">
-                                    TRADE
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="book-card">
-                        <div class="book-card__top">
-                            <img class="book-card__top__img" src="/img/book-testing.jpg" alt="Book Image">
-                            <span class="book-card__top__date">2017</span>
-                            <a class="book-card__top__info"> More Info</a>
-                        </div>
-                        <div class="book-card__bottom">
-                            <h2 class="book-card__bottom__title">The Lord of the Rings</h2>
-                            <p class="book-card__bottom__author">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> J.R.R. Tolkien</p>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-default btn-default-green">
-                                    TRADE
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-            </div>
+            {{/each}} {{else}}
+            <p class="lead text-center">No books registed yet</p>
+            {{/if}}
         </div>
 
     </div>

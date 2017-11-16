@@ -22,7 +22,7 @@
                 </div>
             </div>
             {{#if books}} {{#each books}}
-            <div class="col-lg-3 col-md-4 col-sm-6" book-id="{{id}}">
+            <div class="col-lg-3 col-md-4 col-sm-6" data-book-id="{{id}}">
                 <div class="book-card">
                     <div class="book-card__top">
                         <img class="book-card__top__img" src="{{image}}" alt="Book Image">
@@ -46,7 +46,7 @@
         <div class="row addbook">
             <div class="col-md-12 text-center mt-2 mb-4">
                 <div class="search">
-                    <input type="text" class="search__input" placeholder="search by book name">
+                    <input type="text" class="search__input" id="booksAddSearch" placeholder="search by book name">
                 </div>
             </div>
             <div class="col-md-12">

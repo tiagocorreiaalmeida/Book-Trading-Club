@@ -33,7 +33,7 @@ $("document").ready(function () {
 
   let appendData = (parent, attr, ele, icon,method) => {
     $(`${parent}`).append(`
-    <div class="col-lg-3 col-md-4 col-sm-6" ${attr}-id="${ele.id}">
+    <div class="col-lg-3 col-md-4 col-sm-6" data-${attr}-id="${ele.id}">
          <div class="book-card">
              <div class="book-card__top">
                  <img class="book-card__top__img" src="${ele.image}" alt="Book Image">
@@ -56,9 +56,9 @@ $("document").ready(function () {
   }
 
   let lastSearch = "";
-  $(".search__input").keypress((e) => {
+  $("#booksAddSearch").keypress((e) => {
     if (e.which === 13) {
-      let input = $(".search__input").val();
+      let input = $("#booksAddSearch").val();
       if (input === "") {
         alertMessage("info", "Fill the input to search for books");
       } else {
@@ -97,7 +97,7 @@ $("document").ready(function () {
           $("#empty").remove();
         }
         appendData(".mybooks", "book", data, "fa-trash-o","remove");
-        $(`[ele-id="${id}"]`).fadeOut();
+        $(`[data-ele-id="${id}"]`).fadeOut();
         alertMessage("success", "Book added with success to your books");
       }
     }));
@@ -110,12 +110,30 @@ $("document").ready(function () {
     let id = this.id;
     $.getJSON(`/user/books/remove/${id}`,((data)=>{
       if(data && data.message){
-        $(`[book-id="${id}"]`).fadeOut();
+        $(`[data-book-id="${id}"]`).fadeOut();
         if ($(".alertsDelete").length > 0) {
           $(".alertsDelete").empty();
         }
           $(".alertsDelete").append(`<p class="alert-default alert-default-success mb-4">${data.message}</p>`);
       }
-    }))
-  })
+    }));
+  });
+
+  /////////////////////////////////////////
+  //REQUEST TRADE
+  $(".request").on("click",function(){
+    let bookId = $(this).attr("data-id");
+    let userid= $(`[data-select="${bookId}"] option:selected`).val();
+    let container = $(`[data-book="${bookId}"]`);
+    $.getJSON(`books/${bookId}/${userid}`,((data)=>{
+      $(".close").click();
+      if(data && data.error){
+        alertMessage("danger", data.error);
+      }else if(data){
+        alertMessage("success", data.message);
+        container.fadeOut();
+      }
+    }));
+  });
+
 });
