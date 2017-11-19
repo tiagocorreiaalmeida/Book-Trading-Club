@@ -1,3 +1,4 @@
+"use strict"
 $("document").ready(function () {
 
   /////////////////////////////////////////
@@ -125,6 +126,9 @@ $("document").ready(function () {
     let bookId = $(this).attr("data-id");
     let userid= $(`[data-select="${bookId}"] option:selected`).val();
     let container = $(`[data-book="${bookId}"]`);
+    console.log("bookid",bookId);
+    console.log("userid",userid);
+    console.log("container",container);
     $.getJSON(`books/${bookId}/${userid}`,((data)=>{
       $(".close").click();
       if(data && data.error){
