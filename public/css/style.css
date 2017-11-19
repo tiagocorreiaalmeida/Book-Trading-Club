@@ -230,7 +230,12 @@ nav{
 }
 
 .page__title-mybooks{
-    background-image: url("/img/requests.jpg");
+    background-image: url("/img/mybooks.jpg");
+    background-position: bottom;
+}
+
+.page__title-books{
+    background-image: url("/img/allbooks.jpg");
 }
 
 .page__title h1{
@@ -287,9 +292,11 @@ nav{
 
 /* //////////////////////////////////////////// */
 /* REUSABLE */
+
 .modal-dialog-default{
     max-width: 400px;
 }
+
 .btn-default{
     display: inline-block;
     border-radius: 100px;
@@ -316,10 +323,6 @@ nav{
     cursor:pointer;
 }
 
-.page-navigation{
-
-}
-
 .page-navigation__item{
     cursor: pointer;
     display: inline-block;
@@ -342,7 +345,15 @@ nav{
     margin-right: 1.5rem;
 }
 
+.heading-default{
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 1.6rem;
+}
 
+.paragraph{
+    font-size:1.4rem;
+}
 /* //////////////////////////////////////////// */
 /* BOOKS LAYOUT */
 .row.mybooks{

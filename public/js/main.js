@@ -28,11 +28,11 @@ $("document").ready(function () {
       $(".alerts").empty();
     }
     if (message) {
-      $(".alerts").append(`<p class="alert-default alert-default-${type} mb-4">${message}</p>`);
+      $(".alerts").append(`<p class="alert-default alert-default-${type}">${message}</p>`);
     }
   }
 
-  let appendData = (parent, attr, ele, icon,method) => {
+  let appendData = (parent, attr, ele, icon, method) => {
     $(`${parent}`).append(`
     <div class="col-lg-3 col-md-4 col-sm-6" data-${attr}-id="${ele.id}">
          <div class="book-card">
@@ -70,12 +70,12 @@ $("document").ready(function () {
             $(".sk-circle").css("display", "none");
             if (data && data.error) {
               alertMessage("danger", data.error);
-            }else if(data && data.message){
-              alertMessage("info",data.message);
+            } else if (data && data.message) {
+              alertMessage("info", data.message);
             } else if (data) {
               alertMessage();
               data.forEach((ele) => {
-                appendData("#addbook", "ele", ele, "fa-plus-circle","addtobooks");
+                appendData("#addbook", "ele", ele, "fa-plus-circle", "addtobooks");
               });
             }
           }));
@@ -87,53 +87,123 @@ $("document").ready(function () {
 
   $("#addbook").on("click", ".addtobooks", function () {
     let id = this.id;
-    $(`#${id}`).css("pointer-events","none");
+    $(`#${id}`).css("pointer-events", "none");
     $.getJSON(`/user/books/add/${id}`, ((data) => {
       if (data && data.error) {
         alertMessage("danger", data.error);
-        $(`#${id}`).css("pointer-events","auto");
+        $(`#${id}`).css("pointer-events", "auto");
       } else if (data) {
-        console.log(data);
-        if($("#empty").length > 0){
+        if ($("#empty").length > 0) {
           $("#empty").remove();
         }
-        appendData(".mybooks", "book", data, "fa-trash-o","remove");
+        appendData(".mybooks", "book", data, "fa-trash-o", "remove");
         $(`[data-ele-id="${id}"]`).fadeOut();
         alertMessage("success", "Book added with success to your books");
-      }
-    }));
-  })
-
-
-  /////////////////////////////////////////
-  //REMOVE BOOKS
-  $(".mybooks").on("click"  ,".remove",function(e){
-    let id = this.id;
-    $.getJSON(`/user/books/remove/${id}`,((data)=>{
-      if(data && data.message){
-        $(`[data-book-id="${id}"]`).fadeOut();
-        if ($(".alertsDelete").length > 0) {
-          $(".alertsDelete").empty();
-        }
-          $(".alertsDelete").append(`<p class="alert-default alert-default-success mb-4">${data.message}</p>`);
       }
     }));
   });
 
   /////////////////////////////////////////
+  //REMOVE BOOKS
+  $(".mybooks").on("click", ".remove", function (e) {
+    let id = this.id;
+    $.getJSON(`/user/books/remove/${id}`, ((data) => {
+      if (data && data.message) {
+        $(`[data-book-id="${id}"]`).fadeOut();
+        if ($(".alertsDelete").length > 0) {
+          $(".alertsDelete").empty();
+        }
+        $(".alertsDelete").append(`<p class="alert-default alert-default-success mb-4">${data.message}</p>`);
+      }
+    }));
+  });
+
+  /////////////////////////////////////////
+  //SEARCH BOOK
+  $("#bookListSearch").keypress((e) => {
+    if (e.which === 13) {
+      let input = $("#bookListSearch").val();
+      if (input === "") {
+        alertMessage("info", "Fill the input to search for books");
+      } else {
+        if (lastSearch !== input) {
+          $("#bookslist-two").empty();
+          $(".sk-circle").css("display", "block");
+          $.getJSON(`/books/search/${input}`, ((data) => {
+            $(".sk-circle").css("display", "none");
+            if (data && data.error) {
+              alertMessage("danger", data.error);
+            } else if (data) {
+              alertMessage();
+               data.forEach((ele) => {
+               let bookOwners = ele.owners.reduce((acc,ele)=>{
+                return acc + `<option value="${ele.user_id}">${ele.username}</option>`
+               },"");
+                $("#bookslist-two").append(`
+                <div class="col-lg-3 col-md-4 col-sm-6" data-book="${ele.id}">
+                <div class="book-card">
+                    <div class="book-card__top">
+                        <img class="book-card__top__img" src="${ele.image}" alt="Book Image">
+                        <span class="book-card__top__date">${ele.date}</span>
+                        <a class="book-card__top__info" href="${ele.url}"> More Info</a>
+                    </div>
+                    <div class="book-card__bottom">
+                        <h2 class="book-card__bottom__title">${ele.title}</h2>
+                        <p class="book-card__bottom__author">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> ${ele.authors}</p>
+                        <div class="text-center">
+                            <a data-toggle="modal" data-target="#${ele.id}" class="btn btn-default btn-default-green">
+                                TRADE
+                            </a>
+                            <div class="modal fade" id="${ele.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-default" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Choose one user to trade with:</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <select class="custom-select" data-select="${ele.id}">
+                                                ${bookOwners}
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-info request" data-id="${ele.id}">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`)
+              });
+            }
+          })); 
+          lastSearch = input;
+        }
+      }
+    }
+  });
+
+  /////////////////////////////////////////
   //REQUEST TRADE
-  $(".request").on("click",function(){
+  $("#bookslist-two").on("click", ".request", function () {
     let bookId = $(this).attr("data-id");
-    let userid= $(`[data-select="${bookId}"] option:selected`).val();
+    let userid = $(`[data-select="${bookId}"] option:selected`).val();
     let container = $(`[data-book="${bookId}"]`);
-    console.log("bookid",bookId);
-    console.log("userid",userid);
-    console.log("container",container);
-    $.getJSON(`books/${bookId}/${userid}`,((data)=>{
+    $.getJSON(`books/${bookId}/${userid}`, ((data) => {
       $(".close").click();
-      if(data && data.error){
+      if (data && data.error) {
         alertMessage("danger", data.error);
-      }else if(data){
+      } else if (data) {
         alertMessage("success", data.message);
         container.fadeOut();
       }

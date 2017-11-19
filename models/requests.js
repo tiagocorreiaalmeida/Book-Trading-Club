@@ -35,7 +35,7 @@ const RequestSchema = mongoose.Schema({
     },
     state:{
         type: Boolean,
-        default:0
+        default:false
     }
 });
 

@@ -169,14 +169,12 @@ router.get("/books/remove/:id", (req, res) => {
         if (data) {
             return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
         }
-        return null;
     }).then((doc) => {
         if (doc) {
             if (doc.owners.length === 0) {
                 return Book.findOneAndRemove({ id });
             }
         }
-        return null;
     }).then((deletedDoc) => {
         res.send(JSON.stringify({ message: "Book removed from your list with success" }));
     }).catch((e) => {

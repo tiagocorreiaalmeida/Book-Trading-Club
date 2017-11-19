@@ -1,13 +1,40 @@
 {{> header}}
 <main>
-    <div class="page__title page__title-request">
+    <div class="page__title page__title-books">
         <h1>ALL BOOKS</h1>
     </div>
     <div class="container mt-2">
         <div class="row mb-5 mt-5">
-            <h2 class="text-center">Request trades on books you dont own</h2>
-            <div class="alerts col-md-12 text-center mb-4">
+            <div class="text-center col-md-12">
+                <h2 class="heading-default">Request trades on books you dont own</h2>
+                {{#if books}}
+                <div class="col-md-12 text-center mt-4 mb-4">
+                    <div class="search">
+                        <input type="text" class="search__input" id="bookListSearch" placeholder="search by book name">
+                    </div>
+                </div>
+                {{/if}}
+                <div class="alerts mb-3">
+                </div>
+                <div class="spinner">
+                    <div class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="row" id="bookslist-two">
             {{#if books}} {{#each books}}
             <div class="col-lg-3 col-md-4 col-sm-6" data-book="{{id}}">
                 <div class="book-card">
@@ -56,10 +83,11 @@
                 </div>
             </div>
             {{/each}} {{else}}
-            <p class="lead text-center">No books registed yet</p>
+            <div class="col-md-12 mt-4">
+                <p class="paragraph">No books found</p>
+            </div>
             {{/if}}
         </div>
-
     </div>
 </main>
 {{> footer}}
