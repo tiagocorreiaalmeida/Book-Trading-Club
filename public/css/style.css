@@ -532,6 +532,9 @@ nav{
     align-items: center;
 }
 
+#myrequests{
+    display: none;
+}
 
 /* //////////////////////////////////////////// */
 /* ALERTS */

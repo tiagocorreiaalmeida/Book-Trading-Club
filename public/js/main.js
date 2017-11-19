@@ -135,10 +135,10 @@ $("document").ready(function () {
               alertMessage("danger", data.error);
             } else if (data) {
               alertMessage();
-               data.forEach((ele) => {
-               let bookOwners = ele.owners.reduce((acc,ele)=>{
-                return acc + `<option value="${ele.user_id}">${ele.username}</option>`
-               },"");
+              data.forEach((ele) => {
+                let bookOwners = ele.owners.reduce((acc, ele) => {
+                  return acc + `<option value="${ele.user_id}">${ele.username}</option>`
+                }, "");
                 $("#bookslist-two").append(`
                 <div class="col-lg-3 col-md-4 col-sm-6" data-book="${ele.id}">
                 <div class="book-card">
@@ -186,11 +186,31 @@ $("document").ready(function () {
             </div>`)
               });
             }
-          })); 
+          }));
           lastSearch = input;
         }
       }
     }
+  });
+
+  /////////////////////////////////////////
+  //REQUEST MENU
+  $("#nav-user-requests").on("click", function () {
+    if (!$("#nav-user-requests").hasClass("active")) {
+      $("#nav-my-requests").removeClass("active");
+      $("#nav-user-requests").addClass("active");
+      $("#myrequests").fadeOut();
+      $("#userRequests").delay(600).fadeIn();
+    };
+  });
+
+  $("#nav-my-requests").on("click", function () {
+    if (!$("#nav-my-requests").hasClass("active")) {
+      $("#nav-user-requests").removeClass("active");
+      $("#nav-my-requests").addClass("active");
+      $("#userRequests").fadeOut();
+      $("#myrequests").delay(600).fadeIn();
+    };
   });
 
   /////////////////////////////////////////
@@ -209,5 +229,10 @@ $("document").ready(function () {
       }
     }));
   });
+
+  /////////////////////////////////////////
+  //
+
+
 
 });

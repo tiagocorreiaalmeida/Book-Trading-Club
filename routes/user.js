@@ -184,15 +184,49 @@ router.get("/books/remove/:id", (req, res) => {
 });
 
 router.get("/requests", auth, (req, res) => {
-    Request.find({to:req.user.id,state:true}).then((requests)=>{
-        if(requests.length === 0){
+    let userRequests;
+    let myRequests;
+    let myBooks;
+    Request.find({to:req.user.id,state:true}).then((userReq)=>{
+        userRequests = userReq;
+        if(userReq.length === 0){
             req.flash("info", "You have no requests pending");
-            res.render("requests");
-        }else{
-            res.render("requests",{requests});
         }
-    })
-});
+        return Request.find({"from.user_id":req.user.id});
+    }).then((myReq)=>{
+        if(myReq.length === 0){
+            req.flash("info-2", "You have no requests pending");
+        }
+        myRequests = myReq;
+        return Book.find({ "owners.user_id": req.user.id },{_id:0, id:1,title:1}).sort({ title: 1 })
+    }).then((booksDoc)=>{
+        if (booksDoc.length === 0) return;
+        myBooks = booksDoc;
+        return Request.find({ $or:[{"from.user_id": req.user.id}, {"to":req.user.id}]}, { _id: 0, book_id_requested: 1, book_id_selected:1 });
+    }).then((requestsDoc)=>{
+        let booksRequested = [];
 
+        if(!requestsDoc){
+            res.render("requests",{userRequests,myRequests, myBooks});
+        }else{
+            requestsDoc.forEach((ele) =>{
+                if(ele.book_id_requested){
+                    booksRequested.push(ele.book_id_requested);
+                }
+                if(ele.book_id_selected){
+                    booksRequested.push(ele.book_id_selected);
+                }
+            });
+            if (booksRequested.length === 0) return res.render("requests",{userRequests,myRequests,myBooks});
+            if(booksRequested.length > 0){
+                let filteredData = myBooks.filter(ele => booksRequested.indexOf(ele.id) === -1);
+                myBooks = filteredData;
+                res.render("requests",{userRequests,myRequests,myBooks});
+            }
+        }
+    }).catch((e)=>{
+        console.log(e);
+    });
+});
 
 module.exports = router;
