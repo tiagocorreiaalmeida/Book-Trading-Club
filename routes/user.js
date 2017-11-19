@@ -4,6 +4,7 @@ const express = require("express"),
 
 const User = require("../models/user"),
     Book = require("../models/books"),
+    Request = require("../models/requests"),
     auth = require("../middleware/authenticated");
 
 router.get("/profile", auth, (req, res) => {
@@ -16,7 +17,7 @@ router.get("/profile", auth, (req, res) => {
 
 const options = {
     field: 'title',
-    limit: 16,
+    limit: 15,
     type: 'books',
     order: 'relevance',
     lang: 'en'
@@ -34,10 +35,6 @@ router.post("/profile", auth, (req, res) => {
     }).catch((e) => {
         console.log(e);
     })
-});
-
-router.get("/requests", auth, (req, res) => {
-    res.render("requests");
 });
 
 router.get("/books", auth, (req, res) => {
@@ -176,10 +173,26 @@ router.get("/books/remove/:id", (req, res) => {
             }
         }
     }).then((deletedDoc) => {
+        return Request.remove(
+            {$or:[{"to":req.user.id,"book_id_requested":id},
+            {"from.user_id":req.user.id,"book_id_selected":id}]});
+    }).then((requestsDeleted)=>{
         res.send(JSON.stringify({ message: "Book removed from your list with success" }));
     }).catch((e) => {
         console.log(e);
     })
 });
+
+router.get("/requests", auth, (req, res) => {
+    Request.find({to:req.user.id,state:true}).then((requests)=>{
+        if(requests.length === 0){
+            req.flash("info", "You have no requests pending");
+            res.render("requests");
+        }else{
+            res.render("requests",{requests});
+        }
+    })
+});
+
 
 module.exports = router;

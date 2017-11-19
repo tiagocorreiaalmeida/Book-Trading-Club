@@ -10,10 +10,11 @@ const Book = require("../models/books"),
 router.get("/", (req, res) => {
     let books = [];
     Book.find({ "owners.user_id": { $ne: req.user.id } }).sort({ title: 1 }).then((booksDoc) => {
-        if (booksDoc.length === 0) res.render("books");
+        if (booksDoc.length === 0) return;
         books = booksDoc;
         return Request.find({ "from.user_id": req.user.id }, { _id: 0, book_id_requested: 1 });
     }).then((data) => {
+        if(!data) return res.render("books");
         let booksRequested = data.map(ele => ele.book_id_requested);
         if (booksRequested.length === 0) return res.render("books", { books });
         let filteredData = books.filter(ele => booksRequested.indexOf(ele.id) === -1);
@@ -23,17 +24,18 @@ router.get("/", (req, res) => {
 });
 
 router.get("/search/:name", (req, res) => {
-    let input = req.params.name+"*";
+    let input = req.params.name + "*";
     let books = [];
-    Book.find({ title:{$regex:input, $options:'i'}, "owners.user_id": { $ne: req.user.id } }).sort({ title: 1 }).then((booksDoc) => {
-        if (booksDoc.length === 0) return res.send(JSON.stringify({ error: "No books found based on your search" }));
+    Book.find({ title: { $regex: input, $options: 'i' }, "owners.user_id": { $ne: req.user.id } }).sort({ title: 1 }).then((booksDoc) => {
+        if (booksDoc.length === 0) return;
         books = booksDoc;
-        return Request.find({"from.user_id": req.user.id }, { _id: 0, book_id_requested: 1 });
+        return Request.find({ "from.user_id": req.user.id }, { _id: 0, book_id_requested: 1 });
     }).then((data) => {
-        let booksRequested = data.map(ele => ele.book_id_requested);
-        if (booksRequested.length === 0) return res.send(JSON.stringify(books));
-        let filteredData = books.filter(ele => booksRequested.indexOf(ele.id) === -1);
-        res.send(JSON.stringify(filteredData));
+        if (!data) return res.send(JSON.stringify({ error: "No books found based on your search" }));
+            let booksRequested = data.map(ele => ele.book_id_requested);
+            if (booksRequested.length === 0) return res.send(JSON.stringify(books));
+            let filteredData = books.filter(ele => booksRequested.indexOf(ele.id) === -1);
+            res.send(JSON.stringify(filteredData));
     }).catch((e) => { console.log(e); });
 });
 
