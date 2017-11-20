@@ -38,9 +38,9 @@
                     <div class="book-card__bottom">
                         <p class="book-card__bottom__author margin-none">
                             <i class="fa fa-user" aria-hidden="true"></i> {{from.user_username}}</p>
-                        <h2 class="book-card__bottom__title-2 ">{{book_title_requested}}</h2>
+                        <h2 class="book-card__bottom__title-2 ">{{book_title_selected}}</h2>
                         <h2 class="book-card__bottom__title-3">For</h2>
-                        <h2 class="book-card__bottom__title-2">{{book_title_selected}}</h2>
+                        <h2 class="book-card__bottom__title-2">{{book_title_requested}}</h2>
                         <div class="book-card__bottom__buttons text-center" data-id="{{_id}}">
                             <a href="#" class="btn btn-default btn-default-double btn-default-green accept">
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -69,11 +69,11 @@
                 <div class="book-card">
                     <div class="book-card__top">
                         {{#if book_id_selected}}
-                        <a class="book-card__top__item" href="{{book_url_selected}}">
+                        <a class="book-card__top__item left" href="{{book_url_selected}}">
                             <img class="book-card__top__item__img" src="{{book_img_selected}}" alt="Book Image">
                         </a>
                         {{else}}
-                        <a href="#" data-toggle="modal" data-target="#booksAvailable" data-choose="{{_id}}" class="book-card__top__item book-card__top__item-link choose">
+                        <a href="#" data-toggle="modal" data-target="#booksAvailable" data-choose="{{_id}}" class="book-card__top__item book-card__top__item-link choose left">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </a>
                         {{/if}}
@@ -88,9 +88,7 @@
                         {{#if book_id_selected}}
                         <h2 class="book-card__bottom__title-2 setTitle">{{book_title_selected}}</h2>
                         {{else}}
-                        <em>
-                            <h2 class="book-card__bottom__title-2">Select a book first</h2>
-                        </em>
+                            <h2 class="book-card__bottom__title-2 setTitle"><em>Select a book first</em></h2>
                         {{/if}}
                         <h2 class="book-card__bottom__title-3">For</h2>
                         <h2 class="book-card__bottom__title-2 ">{{book_title_requested}}</h2>
@@ -127,16 +125,17 @@
                             <button type="button" class="btn btn-secondary decline" data-dismiss="modal">
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
+                            {{#if myBooks}}
                             <button type="button" class="btn btn-info setBook">
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             </button>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
             </div>
             {{/if}}
         </div>
-    </div>
     </div>
 </main>
 {{> footer}}

@@ -1,6 +1,8 @@
+"use strict"
 const express = require("express"),
     router = express.Router(),
-    books = require("google-books-search");
+    books = require("google-books-search"),
+    {ObjectID} = require("mongodb");
 
 const User = require("../models/user"),
     Book = require("../models/books"),
@@ -94,7 +96,6 @@ router.get("/books/search/:term", (req, res) => {
                 res.send(JSON.stringify({ error: "No books found based on your search" }));
             }
         } else {
-            console.log(error);
             res.redirect("/books");
         }
     });
@@ -162,9 +163,9 @@ router.get("/books/add/:id", (req, res) => {
 
 router.get("/books/remove/:id", (req, res) => {
     let id = req.params.id;
-    Book.findOne({ id }).then((data) => {
+    Book.findOne({ id,"owners.user_id":req.user.id }).then((data) => {
         if (data) {
-            return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
+           return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
         }
     }).then((doc) => {
         if (doc) {
@@ -231,19 +232,39 @@ router.get("/requests", auth, (req, res) => {
 
 router.get("/requests/delete/:id",(req,res)=>{
     let id = req.params.id;
-    Request.findByIdAndRemove(id).then((doc)=>{
+    Request.findOneAndRemove(id).then((doc)=>{
         if(doc){
-            res.send(JSON.stringify({message: "Deleted with success"}));
+            res.send(JSON.stringify(doc));
         }
     }).catch((e)=>{
         console.log(e);
     })
 });
 
-router.get("/requests/complete/:id",(req,res)=>{
-    let id = req.params.id;
-    Request.findById(id).then((doc)=>{
-
+router.get("/requests/complete/:reqId/:bookId",(req,res)=>{
+    let requestID = req.params.reqId;
+    let bookID = req.params.bookId;
+    Request.findOne({"from.user_id":req.user.id,"book_id_selected":bookID}).then((doc)=>{
+        if(!doc){
+            return Request.findOne({_id: ObjectID(requestID), "from.user_id":req.user.id});
+        }
+    }).then((reqDoc)=>{
+        if(reqDoc){
+            return Book.findOne({id:bookID,"owners.user_id":req.user.id});
+        }
+    }).then((bookDoc)=>{
+        if(bookDoc){
+            return Request.findByIdAndUpdate(requestID,
+                {$set:{"book_id_selected":bookDoc.id,
+                "book_img_selected":bookDoc.image,
+                "book_url_selected":bookDoc.url,
+                "book_title_selected":bookDoc.title,
+                state:true}},{new:true});
+        }
+    }).then((updatedDoc)=>{
+        res.send(JSON.stringify(updatedDoc));
+    }).catch((e)=>{
+        console.log(e);
     });
 });
 
