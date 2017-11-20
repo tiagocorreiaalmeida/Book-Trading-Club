@@ -65,7 +65,7 @@
                 </div>
             </div>
             {{#if myRequests}} {{#each myRequests}}
-            <div class="col-lg-3 col-md-4 col-sm-6" data-book="{{_id}}">
+            <div class="col-lg-3 col-md-4 col-sm-6" data-book-2="{{_id}}">
                 <div class="book-card">
                     <div class="book-card__top">
                         {{#if book_id_selected}}
@@ -73,9 +73,9 @@
                             <img class="book-card__top__item__img" src="{{book_img_selected}}" alt="Book Image">
                         </a>
                         {{else}}
-                        <a data-toggle="modal" data-target="modalid" class="book-card__top__item">
-                                <span>Choose</span>
-                            </a>
+                        <a href="#" data-toggle="modal" data-target="#booksAvailable" data-choose="{{_id}}" class="book-card__top__item book-card__top__item-link choose">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </a>
                         {{/if}}
                         <a class="book-card__top__item" href="{{book_url_requested}}">
                             <img class="book-card__top__item__img" src="{{book_img_requested}}" alt="Book Image 2">
@@ -86,25 +86,55 @@
                     </div>
                     <div class="book-card__bottom">
                         {{#if book_id_selected}}
-                        <h2 class="book-card__bottom__title-2">{{book_title_selected}}</h2>
+                        <h2 class="book-card__bottom__title-2 setTitle">{{book_title_selected}}</h2>
                         {{else}}
-                        <em><h2 class="book-card__bottom__title-2">Select a book first</h2></em>
+                        <em>
+                            <h2 class="book-card__bottom__title-2">Select a book first</h2>
+                        </em>
                         {{/if}}
                         <h2 class="book-card__bottom__title-3">For</h2>
                         <h2 class="book-card__bottom__title-2 ">{{book_title_requested}}</h2>
-                        <div class="book-card__bottom__buttons text-center" data-id="{{_id}}">
-                            <a href="#" class="btn btn-default btn-default-double btn-default-green update">
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="btn btn-default btn-default-double btn-default-red remove">
+                        <div class="book-card__bottom__buttons text-center">
+                            <a href="#" class="btn btn-default btn-default-red remove" data-id="{{id}}">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            {{/each}}{{/if}}
-            <p>{{myBooks}}</p> {{!-- create modal with books name --}}
+            {{/each}}
+            <div class="modal fade" id="booksAvailable" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-default" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Choose what book to offer:</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{#if myBooks}}
+                            <select class="custom-select" data-select="userBooksAvaible">
+                                {{#each myBooks}}
+                                <option value="{{id}}">{{title}}</option>
+                                {{/each}}
+                            </select>
+                            {{else}}
+                            <p class="lead">You have no books avaible to trade</p>
+                            {{/if}} 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary decline" data-dismiss="modal">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="btn btn-info setBook">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
         </div>
     </div>
     </div>

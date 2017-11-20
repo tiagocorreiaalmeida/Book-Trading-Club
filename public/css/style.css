@@ -12,6 +12,7 @@ main{
     padding-bottom: 4rem;
 }
 
+
 /* //////////////////////////////////////////// */
 /* HOMEPAGE */
 .banner{
@@ -64,6 +65,8 @@ main{
     box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
     transform: translateY(-1px);
 }
+
+
 
 /* //////////////////////////////////////////// */
 /* FEATURE BOX */
@@ -292,7 +295,6 @@ nav{
 
 /* //////////////////////////////////////////// */
 /* REUSABLE */
-
 .modal-dialog-default{
     max-width: 400px;
 }
@@ -442,6 +444,17 @@ nav{
 
 .book-card__top__item{
     flex:0 0 50%;
+}
+
+.book-card__top__item-link:link,
+.book-card__top__item-link:link:visited{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color:inherit;
+    font-size: 1.3rem;
+    outline: none;
 }
 
 .book-card__top__item__img{

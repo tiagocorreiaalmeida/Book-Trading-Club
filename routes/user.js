@@ -229,4 +229,22 @@ router.get("/requests", auth, (req, res) => {
     });
 });
 
+router.get("/requests/delete/:id",(req,res)=>{
+    let id = req.params.id;
+    Request.findByIdAndRemove(id).then((doc)=>{
+        if(doc){
+            res.send(JSON.stringify({message: "Deleted with success"}));
+        }
+    }).catch((e)=>{
+        console.log(e);
+    })
+});
+
+router.get("/requests/complete/:id",(req,res)=>{
+    let id = req.params.id;
+    Request.findById(id).then((doc)=>{
+
+    });
+});
+
 module.exports = router;

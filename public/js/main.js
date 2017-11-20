@@ -23,12 +23,12 @@ $("document").ready(function () {
     }
   });
 
-  let alertMessage = (type, message) => {
-    if ($(".alerts").length > 0) {
-      $(".alerts").empty();
+  let alertMessage = (ele,type, message) => {
+    if ($(ele).length > 0) {
+      $(ele).empty();
     }
     if (message) {
-      $(".alerts").append(`<p class="alert-default alert-default-${type}">${message}</p>`);
+      $(ele).append(`<p class="alert-default alert-default-${type}">${message}</p>`);
     }
   }
 
@@ -59,9 +59,9 @@ $("document").ready(function () {
   let lastSearch = "";
   $("#booksAddSearch").keypress((e) => {
     if (e.which === 13) {
-      let input = $("#booksAddSearch").val();
+      let input = $("#booksAddSearch").val().trim();
       if (input === "") {
-        alertMessage("info", "Fill the input to search for books");
+        alertMessage(".alerts","info", "Fill the input to search for books");
       } else {
         if (lastSearch !== input) {
           $("#addbook").empty();
@@ -69,11 +69,11 @@ $("document").ready(function () {
           $.getJSON(`/user/books/search/${input}`, ((data) => {
             $(".sk-circle").css("display", "none");
             if (data && data.error) {
-              alertMessage("danger", data.error);
+              alertMessage(".alerts","danger", data.error);
             } else if (data && data.message) {
-              alertMessage("info", data.message);
+              alertMessage(".alerts","info", data.message);
             } else if (data) {
-              alertMessage();
+              alertMessage(".alerts");
               data.forEach((ele) => {
                 appendData("#addbook", "ele", ele, "fa-plus-circle", "addtobooks");
               });
@@ -90,7 +90,7 @@ $("document").ready(function () {
     $(`#${id}`).css("pointer-events", "none");
     $.getJSON(`/user/books/add/${id}`, ((data) => {
       if (data && data.error) {
-        alertMessage("danger", data.error);
+        alertMessage(".alerts","danger", data.error);
         $(`#${id}`).css("pointer-events", "auto");
       } else if (data) {
         if ($("#empty").length > 0) {
@@ -98,7 +98,7 @@ $("document").ready(function () {
         }
         appendData(".mybooks", "book", data, "fa-trash-o", "remove");
         $(`[data-ele-id="${id}"]`).fadeOut();
-        alertMessage("success", "Book added with success to your books");
+        alertMessage(".alerts","success", "Book added with success to your books");
       }
     }));
   });
@@ -122,9 +122,9 @@ $("document").ready(function () {
   //SEARCH BOOK
   $("#bookListSearch").keypress((e) => {
     if (e.which === 13) {
-      let input = $("#bookListSearch").val();
+      let input = $("#bookListSearch").val().trim();
       if (input === "") {
-        alertMessage("info", "Fill the input to search for books");
+        alertMessage(".alerts","info", "Fill the input to search for books");
       } else {
         if (lastSearch !== input) {
           $("#bookslist-two").empty();
@@ -132,9 +132,9 @@ $("document").ready(function () {
           $.getJSON(`/books/search/${input}`, ((data) => {
             $(".sk-circle").css("display", "none");
             if (data && data.error) {
-              alertMessage("danger", data.error);
+              alertMessage(".alerts","danger", data.error);
             } else if (data) {
-              alertMessage();
+              alertMessage(".alerts");
               data.forEach((ele) => {
                 let bookOwners = ele.owners.reduce((acc, ele) => {
                   return acc + `<option value="${ele.user_id}">${ele.username}</option>`
@@ -217,22 +217,53 @@ $("document").ready(function () {
   //REQUEST TRADE
   $("#bookslist-two").on("click", ".request", function () {
     let bookId = $(this).attr("data-id");
-    let userid = $(`[data-select="${bookId}"] option:selected`).val();
+    let userid = $(`[data-select="${bookId}"] option:selected`).val().trim();
     let container = $(`[data-book="${bookId}"]`);
     $.getJSON(`books/${bookId}/${userid}`, ((data) => {
       $(".close").click();
       if (data && data.error) {
-        alertMessage("danger", data.error);
+        alertMessage(".alerts","danger", data.error);
       } else if (data) {
-        alertMessage("success", data.message);
+        alertMessage(".alerts","success", data.message);
         container.fadeOut();
       }
     }));
   });
 
   /////////////////////////////////////////
-  //
+  //DELETE MY REQUESTS
+  $(".remove").on("click",function(){
+    let requestID = $(this).attr("data-id");
+    $.getJSON(`/user/requests/delete/${requestID}`,((data)=>{
+      if(data){
+        $(`[data-book-2="${requestID}"]`).fadeOut();
+        alertMessage(".alerts-user-requests","success",data.message);
+      }else{
+        alertMessage(".alerts-user-requests","danger","Something went wrong,please refresh the page");
+      }
+    }));
+  });
 
+  /////////////////////////////////////////
+  //SELECT BOOK - MY REQUESTS
+  let lastClicked = "";
+  $(".choose").on("click",function(){
+    lastClicked = $(this).attr("data-choose");
+    console.log(lastClicked);
+  });
 
-
+  $(".setBook").on("click",()=>{
+    let element = $('[data-select="userBooksAvaible"]');
+    let option = $('[data-select="userBooksAvaible"] option:selected');
+    let val = option.val();
+    option.remove();
+    if(element.find("option").length === 0){
+      $(".setBook").remove();
+      element.parent().append('<p class="lead">You have no books avaible to trade</p>');
+      element.remove();
+    }
+    if(val){
+      $.getJSON("")
+    }
+  });
 });
