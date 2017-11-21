@@ -331,6 +331,7 @@ router.get("/requests/accept/:id", auth, (req, res) => {
         });
     }).then((deleteUserTwo) => {
         if (state) {
+            res.send(JSON.stringify({message: "Trade completed, your can find your new book in the list"}));
         }
     }).catch((e) => {
         console.log(e);

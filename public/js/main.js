@@ -294,7 +294,10 @@ $("document").ready(function () {
   $(".accept").on("click",function(){
     let requestId = $(this).attr("data-accept");
     $.getJSON(`/user/requests/accept/${requestId}`,((data)=>{
-      console.log(data);
+      if(data){
+        alertMessage(".alerts-user-requests", "success", data.message);
+        $(`[data-book="${requestId}"]`).fadeOut();
+      }
     }));
   });
 
