@@ -42,10 +42,10 @@
                         <h2 class="book-card__bottom__title-3">For</h2>
                         <h2 class="book-card__bottom__title-2">{{book_title_requested}}</h2>
                         <div class="book-card__bottom__buttons text-center" data-id="{{_id}}">
-                            <a href="#" class="btn btn-default btn-default-double btn-default-green accept">
+                            <a href="#" data-accept="{{_id}}" class="btn btn-default btn-default-double btn-default-green accept">
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             </a>
-                            <a href="#" class="btn btn-default btn-default-double btn-default-red decline">
+                            <a href="#" data-accept="{{_id}}" class="btn btn-default btn-default-double btn-default-red decline">
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -61,7 +61,7 @@
             </div>
             {{/if}}
             <div class="col-md-12 mt-3 mb-4 text-center">
-                <div class="alerts-user-requests">
+                <div class="alerts-my-requests">
                 </div>
             </div>
             {{#if myRequests}} {{#each myRequests}}

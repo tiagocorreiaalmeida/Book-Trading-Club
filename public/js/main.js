@@ -239,10 +239,8 @@ $("document").ready(function () {
         $(`[data-book-2="${requestID}"]`).fadeOut();
         if (data.book_id_selected) {
           if($('[data-select="userBooksAvaible"]').length > 0){
-            console.log($('[data-select="userBooksAvaible"]'));
             $('[data-select="userBooksAvaible"]').append(`<option value="${data.book_id_selected}">${data.book_title_selected}</option>`);
           }else{
-            console.log("in here");
             $(".modal-footer").append('<button type="button" class="btn btn-info setBook"><i class="fa fa-check" aria-hidden="true"></i></button>')
             $(".modal-body").append(`<select class="custom-select" data-select="userBooksAvaible">
             <option value="${data.book_id_selected}">${data.book_title_selected}</option>
@@ -265,7 +263,6 @@ $("document").ready(function () {
 
 
   $("#myrequests").on("click",".setBook", () => {
-    console.log("clicked");
     let element = $('[data-select="userBooksAvaible"]');
     let option = $('[data-select="userBooksAvaible"] option:selected');
     let val = option.val();
@@ -278,7 +275,7 @@ $("document").ready(function () {
         eleUpd.append(`<img class="book-card__top__item__img" src="${data.book_img_selected}" alt="Book Image">`);
         ele.find(".book-card__bottom__title-2.setTitle").children().remove();
         ele.find(".book-card__bottom__title-2.setTitle").text(data.book_title_selected);
-        alertMessage(".alerts-user-requests", "success", "Request updated with success");
+        alertMessage(".alerts-my-requests", "success", "Request updated with success");
         $(".close").click();
         option.remove();
         if (element.find("option").length === 0) {
@@ -291,4 +288,26 @@ $("document").ready(function () {
       }
     }));
   });
+
+  /////////////////////////////////////////
+  //ACCEPT REQUEST
+  $(".accept").on("click",function(){
+    let requestId = $(this).attr("data-accept");
+    $.getJSON(`/user/requests/accept/${requestId}`,((data)=>{
+      console.log(data);
+    }));
+  });
+
+  /////////////////////////////////////////
+  //DECLINE REQUEST
+  $(".decline").on("click",function(){
+    let requestId = $(this).attr("data-accept");
+    $.getJSON(`/user/requests/decline/${requestId}`,((data)=>{
+      if(data){
+        alertMessage(".alerts-user-requests", "success", data.message);
+        $(`[data-book="${requestId}"]`).fadeOut();
+      }
+    }));
+  });
+
 });

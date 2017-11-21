@@ -26,11 +26,11 @@
       <div class="navbar-collapse justify-content-end collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <ul class="navbar-nav">
+            {{#if isAuthenticated}}
             <li class="nav-item active">
               <a class="nav-link" href="/books">All books
               </a>
             </li>
-            {{#if isAuthenticated}}
             <li class="nav-item">
               <a class="nav-link" href="/user/books">My books</a>
             </li>
@@ -77,4 +77,4 @@
       </div>
     </div>
   </div>
-   {{/unless}}
+  {{/unless}}

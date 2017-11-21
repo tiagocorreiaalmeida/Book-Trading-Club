@@ -4,10 +4,11 @@ const express = require("express"),
 
 const Book = require("../models/books"),
     User = require("../models/user"),
-    Request = require("../models/requests");
+    Request = require("../models/requests"),
+    auth = require("../middleware/authenticated");
 
 
-router.get("/", (req, res) => {
+router.get("/",auth,(req, res) => {
     let books = [];
     Book.find({ "owners.user_id": { $ne: req.user.id } }).sort({ title: 1 }).then((booksDoc) => {
         if (booksDoc.length === 0) return;
@@ -23,7 +24,7 @@ router.get("/", (req, res) => {
     }).catch((e) => { console.log(e); });
 });
 
-router.get("/search/:name", (req, res) => {
+router.get("/search/:name",auth,(req, res) => {
     let input = req.params.name + "*";
     let books = [];
     Book.find({ title: { $regex: input, $options: 'i' }, "owners.user_id": { $ne: req.user.id } }).sort({ title: 1 }).then((booksDoc) => {
@@ -39,7 +40,7 @@ router.get("/search/:name", (req, res) => {
     }).catch((e) => { console.log(e); });
 });
 
-router.get("/:book/:user", (req, res) => {
+router.get("/:book/:user",auth,(req, res) => {
     let bookID = req.params.book;
     let userID = req.params.user;
     let book;

@@ -2,7 +2,7 @@
 const express = require("express"),
     router = express.Router(),
     books = require("google-books-search"),
-    {ObjectID} = require("mongodb");
+    { ObjectID } = require("mongodb");
 
 const User = require("../models/user"),
     Book = require("../models/books"),
@@ -50,9 +50,9 @@ router.get("/books", auth, (req, res) => {
     });
 });
 
-router.get("/books/search/:term", (req, res) => {
+router.get("/books/search/:term", auth, (req, res) => {
     let term = req.params.term;
-    books.search(term,options, (error, results) => {
+    books.search(term, options, (error, results) => {
         if (!error) {
             if (results.length > 0) {
                 let data = [];
@@ -101,7 +101,7 @@ router.get("/books/search/:term", (req, res) => {
     });
 });
 
-router.get("/books/add/:id", (req, res) => {
+router.get("/books/add/:id", auth, (req, res) => {
     let id = req.params.id;
     books.search(id, (error, data) => {
         if (error || !data[0].publishedDate || !data[0].authors) {
@@ -161,11 +161,11 @@ router.get("/books/add/:id", (req, res) => {
     });
 });
 
-router.get("/books/remove/:id", (req, res) => {
+router.get("/books/remove/:id", auth, (req, res) => {
     let id = req.params.id;
-    Book.findOne({ id,"owners.user_id":req.user.id }).then((data) => {
+    Book.findOne({ id, "owners.user_id": req.user.id }).then((data) => {
         if (data) {
-           return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
+            return Book.findOneAndUpdate({ id }, { $pull: { owners: { user_id: req.user.id } } }, { new: true });
         }
     }).then((doc) => {
         if (doc) {
@@ -175,9 +175,11 @@ router.get("/books/remove/:id", (req, res) => {
         }
     }).then((deletedDoc) => {
         return Request.remove(
-            {$or:[{"to":req.user.id,"book_id_requested":id},
-            {"from.user_id":req.user.id,"book_id_selected":id}]});
-    }).then((requestsDeleted)=>{
+            {
+                $or: [{ "to": req.user.id, "book_id_requested": id },
+                { "from.user_id": req.user.id, "book_id_selected": id }]
+            });
+    }).then((requestsDeleted) => {
         res.send(JSON.stringify({ message: "Book removed from your list with success" }));
     }).catch((e) => {
         console.log(e);
@@ -188,84 +190,172 @@ router.get("/requests", auth, (req, res) => {
     let userRequests;
     let myRequests;
     let myBooks;
-    Request.find({to:req.user.id,state:true}).then((userReq)=>{
+    Request.find({ to: req.user.id, state: true }).then((userReq) => {
         userRequests = userReq;
-        if(userReq.length === 0){
+        if (userReq.length === 0) {
             req.flash("info", "You have no requests pending");
         }
-        return Request.find({"from.user_id":req.user.id});
-    }).then((myReq)=>{
-        if(myReq.length === 0){
+        return Request.find({ "from.user_id": req.user.id });
+    }).then((myReq) => {
+        if (myReq.length === 0) {
             req.flash("info-2", "You have no requests pending");
         }
         myRequests = myReq;
-        return Book.find({ "owners.user_id": req.user.id },{_id:0, id:1,title:1}).sort({ title: 1 })
-    }).then((booksDoc)=>{
+        return Book.find({ "owners.user_id": req.user.id }, { _id: 0, id: 1, title: 1 }).sort({ title: 1 })
+    }).then((booksDoc) => {
         if (booksDoc.length === 0) return;
         myBooks = booksDoc;
-        return Request.find({ $or:[{"from.user_id": req.user.id}, {"to":req.user.id}]}, { _id: 0, book_id_requested: 1, book_id_selected:1 });
-    }).then((requestsDoc)=>{
+        return Request.find({ "from.user_id": req.user.id }, { _id: 0, book_id_requested: 1, book_id_selected: 1 });
+    }).then((requestsDoc) => {
         let booksRequested = [];
 
-        if(!requestsDoc){
-            res.render("requests",{userRequests,myRequests, myBooks});
-        }else{
-            requestsDoc.forEach((ele) =>{
-                if(ele.book_id_requested){
+        if (!requestsDoc) {
+            res.render("requests", { userRequests, myRequests, myBooks });
+        } else {
+            requestsDoc.forEach((ele) => {
+                if (ele.book_id_requested) {
                     booksRequested.push(ele.book_id_requested);
                 }
-                if(ele.book_id_selected){
+                if (ele.book_id_selected) {
                     booksRequested.push(ele.book_id_selected);
                 }
             });
-            if (booksRequested.length === 0) return res.render("requests",{userRequests,myRequests,myBooks});
-            if(booksRequested.length > 0){
+            if (booksRequested.length === 0) return res.render("requests", { userRequests, myRequests, myBooks });
+            if (booksRequested.length > 0) {
                 let filteredData = myBooks.filter(ele => booksRequested.indexOf(ele.id) === -1);
                 myBooks = filteredData;
-                res.render("requests",{userRequests,myRequests,myBooks});
+                res.render("requests", { userRequests, myRequests, myBooks });
             }
         }
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     });
 });
 
-router.get("/requests/delete/:id",(req,res)=>{
+router.get("/requests/delete/:id", auth, (req, res) => {
     let id = req.params.id;
-    Request.findOneAndRemove(id).then((doc)=>{
-        if(doc){
+    Request.findOneAndRemove(id, "from.user_id").then((doc) => {
+        if (doc) {
             res.send(JSON.stringify(doc));
         }
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 });
 
-router.get("/requests/complete/:reqId/:bookId",(req,res)=>{
+router.get("/requests/complete/:reqId/:bookId", auth, (req, res) => {
     let requestID = req.params.reqId;
     let bookID = req.params.bookId;
-    Request.findOne({"from.user_id":req.user.id,"book_id_selected":bookID}).then((doc)=>{
-        if(!doc){
-            return Request.findOne({_id: ObjectID(requestID), "from.user_id":req.user.id});
+    Request.findOne({ "from.user_id": req.user.id, "book_id_selected": bookID }).then((doc) => {
+        if (!doc) {
+            return Request.findOne({ _id: ObjectID(requestID), "from.user_id": req.user.id });
         }
-    }).then((reqDoc)=>{
-        if(reqDoc){
-            return Book.findOne({id:bookID,"owners.user_id":req.user.id});
+    }).then((reqDoc) => {
+        if (reqDoc) {
+            return Book.findOne({ id: bookID, "owners.user_id": req.user.id });
         }
-    }).then((bookDoc)=>{
-        if(bookDoc){
+    }).then((bookDoc) => {
+        if (bookDoc) {
             return Request.findByIdAndUpdate(requestID,
-                {$set:{"book_id_selected":bookDoc.id,
-                "book_img_selected":bookDoc.image,
-                "book_url_selected":bookDoc.url,
-                "book_title_selected":bookDoc.title,
-                state:true}},{new:true});
+                {
+                    $set: {
+                        "book_id_selected": bookDoc.id,
+                        "book_img_selected": bookDoc.image,
+                        "book_url_selected": bookDoc.url,
+                        "book_title_selected": bookDoc.title,
+                        state: true
+                    }
+                }, { new: true });
         }
-    }).then((updatedDoc)=>{
+    }).then((updatedDoc) => {
         res.send(JSON.stringify(updatedDoc));
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     });
+});
+
+router.get("/requests/accept/:id", auth, (req, res) => {
+    let id = req.params.id;
+    let requestData;
+    let userInfo;
+    let state = false;
+
+    //CHECK IF REQUESTS EXISTS AND REMOVE
+    Request.findOneAndRemove({ _id: ObjectID(id), to: req.user.id, state: true }).then((deletedRequest) => {
+        console.log("1------", deletedRequest);
+        if (deletedRequest) {
+            requestData = deletedRequest;
+            return User.findById(requestData.from.user_id, { _id: 1, username: 1 });
+        }
+        //CHECK IF AN USER IS RETURN
+    }).then((userData) => {
+        console.log("2------", userData);
+        if (userData) {
+            userInfo = userData;
+            return Book.findOneAndUpdate({ id: requestData.book_id_requested, "owners.user_id": req.user.id },
+                { $pull: { owners: { user_id: req.user.id } } });
+        }
+        //CHECK IF THE USER WAS PULLED FROM THE BOOK THAT WAS TRADED
+    }).then((userRemovedOne) => {
+        if (userRemovedOne) {
+            return Book.findOneAndUpdate({ id: requestData.book_id_requested },
+                { $push: { owners: { user_id: userInfo._id, username: userInfo.username } } });
+        }
+        //CHECK IF THE NEW OWNER WAS PUSHED INTO THE BOOK THAT REQUESTED
+    }).then((userPushOne) => {
+        console.log("3------", userPushOne);
+        if (userPushOne) {
+            console.log(requestData.book_id_selected);
+            console.log(userInfo._id);
+            return Book.findOne({id: requestData.book_id_selected,owners: {$elemMatch: {user_id: userInfo._id}}});
+            /* return Book.findOne({id: requestData.book_id_selected , "owners.$.user_id": userInfo._id}); */
+            /* ,
+            {$pull: { owners: { user_id: userInfo._id }}},{new:true} */
+        }
+        //CHECK IF THE NEW OWNER WAS REMOVED FROM THE PREVIOUS BOOK OWNERS
+    }).then((userRemoveTwo) => {
+        console.log("4------", userRemoveTwo);
+        if (userRemoveTwo) {
+            return Book.findOneAndUpdate({ id: requestData.book_id_selected }, {
+                $push: {
+                    owners: { user_id: req.user.id, username: req.user.name }
+                }
+            });
+        }
+        //CHECK IF THE THE USER WHO ACCEPETED THE TRADE HAS THE NEW BOOK
+    }).then((userPushTwo) => {
+        console.log("5------", userPushTwo);
+        if (userPushTwo) {
+            state = true;
+            return Request.remove({
+                $or: [{ "from.user_id": req.user.id, "to": req.user.id }],
+                $or: [{ "book_id_requested": requestData.book_id_requested, "book_id_selected": requestData.book_id_requested }]
+            });
+        }
+        //CLEAN ALL THE REQUESTS ONE THE SAME BOOK FROM USER THAT ACCEPETED THE TRADE 
+    }).then((deleteUserOne) => {
+        return Request.remove({
+            $or: [{ "from.user_id": userInfo._id, "to": userInfo._id }],
+            $or: [{ "book_id_requested": requestData.book_id_selected, "book_id_selected": requestData.book_id_selected }]
+        });
+    }).then((deleteUserTwo) => {
+        if (state) {
+            console.log("all cool");
+        }
+    }).catch((e) => {
+        console.log(e);
+    })
+});
+
+router.get("/requests/decline/:id", auth, (req, res) => {
+    let id = req.params.id;
+    Request.findOneAndRemove({_id:ObjectID(id),to:req.user.id,state:true}).then((doc)=>{
+        if(doc){
+            res.send(JSON.stringify({message: "The request was declined with success"}))
+        }
+    }).catch((e)=>{
+        console.log(e);
+    })
 });
 
 module.exports = router;
