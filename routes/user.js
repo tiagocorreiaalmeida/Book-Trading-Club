@@ -282,14 +282,12 @@ router.get("/requests/accept/:id", auth, (req, res) => {
 
     //CHECK IF REQUESTS EXISTS AND REMOVE
     Request.findOneAndRemove({ _id: ObjectID(id), to: req.user.id, state: true }).then((deletedRequest) => {
-        console.log("1------", deletedRequest);
         if (deletedRequest) {
             requestData = deletedRequest;
             return User.findById(requestData.from.user_id, { _id: 1, username: 1 });
         }
         //CHECK IF AN USER IS RETURN
     }).then((userData) => {
-        console.log("2------", userData);
         if (userData) {
             userInfo = userData;
             return Book.findOneAndUpdate({ id: requestData.book_id_requested, "owners.user_id": req.user.id },
@@ -299,32 +297,25 @@ router.get("/requests/accept/:id", auth, (req, res) => {
     }).then((userRemovedOne) => {
         if (userRemovedOne) {
             return Book.findOneAndUpdate({ id: requestData.book_id_requested },
-                { $push: { owners: { user_id: userInfo._id, username: userInfo.username } } });
+                { $push: { owners: { user_id: requestData.from.user_id, username: userInfo.username } } });
         }
         //CHECK IF THE NEW OWNER WAS PUSHED INTO THE BOOK THAT REQUESTED
     }).then((userPushOne) => {
-        console.log("3------", userPushOne);
         if (userPushOne) {
-            console.log(requestData.book_id_selected);
-            console.log(userInfo._id);
-            return Book.findOne({id: requestData.book_id_selected,owners: {$elemMatch: {user_id: userInfo._id}}});
-            /* return Book.findOne({id: requestData.book_id_selected , "owners.$.user_id": userInfo._id}); */
-            /* ,
-            {$pull: { owners: { user_id: userInfo._id }}},{new:true} */
+            return Book.findOneAndUpdate({id: requestData.book_id_selected,"owners.user_id": requestData.from.user_id},
+            {$pull: { owners: { user_id: requestData.from.user_id }}});
         }
         //CHECK IF THE NEW OWNER WAS REMOVED FROM THE PREVIOUS BOOK OWNERS
     }).then((userRemoveTwo) => {
-        console.log("4------", userRemoveTwo);
         if (userRemoveTwo) {
             return Book.findOneAndUpdate({ id: requestData.book_id_selected }, {
                 $push: {
-                    owners: { user_id: req.user.id, username: req.user.name }
+                    owners: { user_id: req.user.id, username: req.user.username }
                 }
             });
         }
         //CHECK IF THE THE USER WHO ACCEPETED THE TRADE HAS THE NEW BOOK
     }).then((userPushTwo) => {
-        console.log("5------", userPushTwo);
         if (userPushTwo) {
             state = true;
             return Request.remove({
@@ -335,12 +326,11 @@ router.get("/requests/accept/:id", auth, (req, res) => {
         //CLEAN ALL THE REQUESTS ONE THE SAME BOOK FROM USER THAT ACCEPETED THE TRADE 
     }).then((deleteUserOne) => {
         return Request.remove({
-            $or: [{ "from.user_id": userInfo._id, "to": userInfo._id }],
+            $or: [{ "from.user_id": requestData.from.user_id, "to": requestData.from.user_id }],
             $or: [{ "book_id_requested": requestData.book_id_selected, "book_id_selected": requestData.book_id_selected }]
         });
     }).then((deleteUserTwo) => {
         if (state) {
-            console.log("all cool");
         }
     }).catch((e) => {
         console.log(e);
