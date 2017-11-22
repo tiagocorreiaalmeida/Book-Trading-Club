@@ -152,7 +152,7 @@ $("document").ready(function () {
                         <p class="book-card__bottom__author">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i> ${ele.authors}</p>
                         <div class="text-center">
-                            <a data-toggle="modal" data-target="#${ele.id}" class="btn btn-default btn-default-green">
+                            <a href="#" data-toggle="modal" data-target="#${ele.id}" class="btn btn-default btn-default-green">
                                 TRADE
                             </a>
                             <div class="modal fade" id="${ele.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

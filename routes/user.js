@@ -108,8 +108,6 @@ router.get("/books/add/:id", auth, (req, res) => {
         if (error || !data[0].publishedDate || !data[0].authors) {
             res.send(JSON.stringify({ error: "Something went wrong please try again later" }));
         } else if (data) {
-            console.log(data);
-            console.log(data[0].thumbnail);
             Book.findOne({ id: id }).then((book) => {
                 if (book) {
                     Book.findOne({ id: id, "owners.user_id": req.user.id }).then((bookDoc) => {
