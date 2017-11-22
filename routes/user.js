@@ -323,7 +323,6 @@ router.get("/requests/accept/:id", auth, (req, res) => {
     }).then((userPushTwo) => {
         if (userPushTwo) {
             state = true;
-            console.log("here it goes one");
             return Request.remove({
                 $or: [{ "from.user_id": req.user.id, "book_id_selected": requestData.book_id_requested},
                 {"to": req.user.id, "book_id_requested": requestData.book_id_requested }]
@@ -331,7 +330,6 @@ router.get("/requests/accept/:id", auth, (req, res) => {
         }
         //CLEAN ALL THE REQUESTS ONE THE SAME BOOK FROM USER THAT ACCEPETED THE TRADE 
     }).then((deleteUserOne) => {
-        console.log("Here it goes two");
         return Request.remove({
             $or: [{ "from.user_id": requestData.from.user_id, "book_id_selected": requestData.book_id_selected},
             { "to": requestData.from.user_id,"book_id_requested": requestData.book_id_selected }]});
