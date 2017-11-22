@@ -5,20 +5,20 @@ $("document").ready(function () {
   //ADD BOOKS
   $("#bookslist").on("click", () => {
     let ele = $("#bookslist");
-    if (!ele.hasClass('active') && $("#booksearch").hasClass('active')) {
+    if (!ele.hasClass('active')) {
       $("#booksearch").removeClass('active');
-      $(".addbook").removeClass('active');
-      $(".mybooks").addClass('active');
+      $(".addbook").fadeOut();
+      $(".mybooks").delay(600).css("display", "flex").hide().fadeIn();
       ele.addClass('active');
     }
   });
 
   $("#booksearch").on("click", () => {
     let ele = $("#booksearch");
-    if (!ele.hasClass('active') && $("#bookslist").hasClass('active')) {
+    if (!ele.hasClass('active')) {
       $("#bookslist").removeClass('active');
-      $(".mybooks").removeClass('active');
-      $(".addbook").addClass('active');
+      $(".mybooks").fadeOut();
+      $(".addbook").delay(600).css("display", "flex").hide().fadeIn();
       ele.addClass('active');
     }
   });

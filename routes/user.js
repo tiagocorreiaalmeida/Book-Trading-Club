@@ -69,6 +69,7 @@ router.get("/books/search/:term", auth, (req, res) => {
                         if (results[i].authors.length > 0) {
                             results[i].authors = results[i].authors.join(", ");
                         }
+                        console.log(results[i].thumbnail);
                         data.push({
                             id: results[i].id,
                             title: results[i].title,
@@ -107,6 +108,8 @@ router.get("/books/add/:id", auth, (req, res) => {
         if (error || !data[0].publishedDate || !data[0].authors) {
             res.send(JSON.stringify({ error: "Something went wrong please try again later" }));
         } else if (data) {
+            console.log(data);
+            console.log(data[0].thumbnail);
             Book.findOne({ id: id }).then((book) => {
                 if (book) {
                     Book.findOne({ id: id, "owners.user_id": req.user.id }).then((bookDoc) => {
@@ -274,6 +277,8 @@ router.get("/requests/complete/:reqId/:bookId", auth, (req, res) => {
     });
 });
 
+
+
 router.get("/requests/accept/:id", auth, (req, res) => {
     let id = req.params.id;
     let requestData;
@@ -318,17 +323,18 @@ router.get("/requests/accept/:id", auth, (req, res) => {
     }).then((userPushTwo) => {
         if (userPushTwo) {
             state = true;
+            console.log("here it goes one");
             return Request.remove({
-                $or: [{ "from.user_id": req.user.id, "to": req.user.id }],
-                $or: [{ "book_id_requested": requestData.book_id_requested, "book_id_selected": requestData.book_id_requested }]
+                $or: [{ "from.user_id": req.user.id, "book_id_selected": requestData.book_id_requested},
+                {"to": req.user.id, "book_id_requested": requestData.book_id_requested }]
             });
         }
         //CLEAN ALL THE REQUESTS ONE THE SAME BOOK FROM USER THAT ACCEPETED THE TRADE 
     }).then((deleteUserOne) => {
+        console.log("Here it goes two");
         return Request.remove({
-            $or: [{ "from.user_id": requestData.from.user_id, "to": requestData.from.user_id }],
-            $or: [{ "book_id_requested": requestData.book_id_selected, "book_id_selected": requestData.book_id_selected }]
-        });
+            $or: [{ "from.user_id": requestData.from.user_id, "book_id_selected": requestData.book_id_selected},
+            { "to": requestData.from.user_id,"book_id_requested": requestData.book_id_selected }]});
     }).then((deleteUserTwo) => {
         if (state) {
             res.send(JSON.stringify({message: "Trade completed, your can find your new book in the list"}));

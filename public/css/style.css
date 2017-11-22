@@ -289,7 +289,7 @@ nav{
 
 .img-thumbnail{
     border-radius: 50%;
-    max-width: 140px;
+    width:125px;
 }
 
 
@@ -403,24 +403,9 @@ nav{
 
 /* //////////////////////////////////////////// */
 /* BOOKS LAYOUT */
-.row.mybooks{
-    visibility: hidden;
-    height:0;
-}
-
-.row.mybooks.active{
-    visibility: visible;
-    height: auto;
-}
 
 .row.addbook{
-    visibility: hidden;
-    height:0;
-}
-
-.row.addbook.active{
-    visibility: visible;
-    height: auto;
+    display: none;
 }
 
 .book-card{

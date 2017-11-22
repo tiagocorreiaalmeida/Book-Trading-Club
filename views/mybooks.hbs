@@ -1,4 +1,4 @@
-{{> header}}
+{{> header active-mybooks='true'}}
 <main>
     <div class="page__title page__title-mybooks">
         <h1>MY BOOKS</h1>
@@ -11,7 +11,7 @@
             <a class="page-navigation__item" id="booksearch">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD BOOK</a>
         </div>
-        <div class="row mybooks active">
+        <div class="row mybooks">
             {{#if messages}}
             <div class="col-md-12 text-center mt-2" id="empty">
                 <p class="lead">{{messages.info}}</p>

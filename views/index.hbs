@@ -27,6 +27,11 @@
                 <p class="feature-box__item__description">Easy accessibility all over the platform.</p>
             </div>
         </div>
+        {{#unless isAuthenticated}}
+        <div class="col-md-12 text-center">
+            <a href="#" class="btn btn-default btn-default-green" data-toggle="modal" data-target="#login">Join us</a>
+        </div>
+        {{/unless}}
     </div>
 </main>
 {{> footer}}
