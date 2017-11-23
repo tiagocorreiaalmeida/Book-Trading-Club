@@ -139,7 +139,7 @@ router.get("/books/add/:id", auth, (req, res) => {
                     } else {
                         date = data[0].publishedDate;
                     }
-                    var newBook = new Book({
+                    let newBook = new Book({
                         id: id,
                         title: data[0].title,
                         authors: data[0].authors,
