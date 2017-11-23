@@ -69,7 +69,6 @@ router.get("/books/search/:term", auth, (req, res) => {
                         if (results[i].authors.length > 0) {
                             results[i].authors = results[i].authors.join(", ");
                         }
-                        console.log(results[i].thumbnail);
                         data.push({
                             id: results[i].id,
                             title: results[i].title,
