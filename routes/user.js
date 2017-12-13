@@ -44,7 +44,7 @@ router.get("/books", auth, (req, res) => {
         if (books.length > 0) {
             res.render("mybooks", { books });
         } else {
-            req.flash("info", "You have no books registed");
+            req.flash("info", "You have no books registered");
             res.render("mybooks");
         }
     });
